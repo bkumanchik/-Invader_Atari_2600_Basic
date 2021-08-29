@@ -1,7 +1,7 @@
 ; Started 8/25/21 Invader Atari 2600 Batari Basic using Visual bB IDE 
 
 
-; to do: turret explosion - reset in center, life meter?, sound
+; to do: turret explosion - reset in center, sound
 
  
  ; Kernel setup (for using more than 2 players - allows sprites 0 through 5) (swaps Y direction for screen)
@@ -11,11 +11,16 @@
  set kernel multisprite
  set romsize 8k
 
+ ; enables pf score bars
+ const pfscore = 0
 
 ; misc. variables --
  scorecolor = 14 
  ;score      = 3
- dim _sc3 = score+2
+ ;dim _sc3 = score+2
+ dim reducing_lives = p : p = 0 ; reducing_lives - set to false
+ ; sets pfscore2 (right bar - 1 is left bar) 
+ pfscore2 = %00101010 ; 3 lives instead of the default 4 (%10101010)
  
 ; invader variables --
  dim inv_x           = a : a = 84
@@ -45,8 +50,16 @@ main
  gosub draw__move_invader
  gosub draw__move_inv_shot
  gosub col_shot_inv
+ gosub col_inv_shot_turret
 
- if _sc3 >= 70 then goto game_over
+ if pfscore2 < 2 then goto game_over
+
+ ; pf score color - green
+ pfscorecolor = 196 
+
+ ; score color - white
+ scorecolor = 14 
+
 
  drawscreen
 
@@ -145,7 +158,7 @@ col_shot_inv
 
  if inv_hit = 1 then inv_blast_delay = inv_blast_delay + 1
 
- if inv_blast_delay > 30 then score = score + 10 : inv_hit = 0 : gosub reset_blast 
+ if inv_blast_delay > 30 then score = score + 10 : pfscore2 = pfscore2 / 4 : inv_hit = 0 : gosub reset_blast 
 
  if inv_hit = 1 then player0:  
  %00000000
@@ -235,11 +248,35 @@ end
 
 
 
+ ; check collision between invader shot and turret
+col_inv_shot_turret
+
+ ;if inv_shot_x + 4 >= tur_x  && inv_shot_x + 2 <= tur_x + 6 && inv_shot_y < tur_y then tur_hit = 1
+
+ ;if inv_hit = 1 then inv_blast_delay = inv_blast_delay + 1
+
+ ;if inv_blast_delay > 30 then score = score + 10 : inv_hit = 0 : gosub reset_blast 
+
+ ;if inv_hit = 1 then player0:  
+ ;%00000000
+ ;%10010010
+ ;%01010100
+ ;%00000000
+ ;%11010110
+ ;%00000000
+ ;%01010100
+ ;%10010010
+;end 
+
+ return
+
+
+
 game_over
 
  if joy0up then reboot
 
- score = 50
+ ;score = 50
  
  player2:
  %00000000

@@ -1,0 +1,376 @@
+
+
+
+
+
+
+
+ includesfile multisprite_bankswitch.inc
+ set kernel_options no_blank_lines
+
+ set kernel multisprite
+ set romsize 8k
+
+
+ const pfscore  =  0
+
+
+
+ dim reducing_lives  =  p  :  p  =  0
+
+ pfscore2  =  %00101010
+
+
+ dim inv_x  =  a  :  a  =  84
+ dim inv_y  =  b  :  b  =  76
+ dim inv_delay  =  c  :  c  =  0
+ dim inv_dir  =  f  :  f  =  1
+ dim inv_shot_x  =  g  :  g  =  inv_x
+ dim inv_shot_y  =  h  :  h  =  inv_y
+ dim inv_fire_delay  =  k  :  k  =  0
+ dim inv_fired  =  l  :  l  =  0
+ dim inv_hit  =  n  :  n  =  0
+ dim inv_blast_delay  =  o  :  o  =  0
+
+
+ dim tur_x  =  d  :  d  =  84
+ dim tur_y  =  e  :  e  =  14
+ dim shot_x  =  i  :  i  =  tur_x
+ dim shot_y  =  j  :  j  =  tur_y
+ dim tur_fired  =  m  :  m  =  0
+ dim tur_hit  =  q  :  q  =  0
+ dim tur_anim_playing  =  r  :  r  =  0
+ dim tur_anim_frame  =  s  :  s  =  0
+
+
+
+
+
+main
+
+ gosub draw__move_turret
+ gosub draw__move_turret_shot
+ gosub draw__move_invader
+ gosub draw__move_inv_shot
+ gosub col_shot_inv
+ gosub col_inv_shot_turret
+
+ if pfscore2  <  2 then goto game_over
+
+
+ pfscorecolor  =  196
+
+
+ scorecolor  =  152
+
+
+ drawscreen
+
+ goto main
+
+
+
+
+
+
+
+draw__move_invader
+
+ inv_delay  =  inv_delay  +  1
+
+
+ if inv_delay  =  15  &&  inv_hit  =  0 then player0:  
+ %00000000
+ %10000010
+ %01000100
+ %11111110
+ %11111110
+ %10111010
+ %01111100
+ %10000010
+end
+
+
+ if inv_delay  =  30  &&  inv_hit  =  0 then player0:  
+ %00000000
+ %00101000
+ %01000100
+ %11111110
+ %11111110
+ %10111010
+ %01111100
+ %01000100
+end
+
+ if inv_delay  >  30 then inv_delay  =  0
+
+
+ COLUP0  =  52
+
+
+ if inv_hit  =  0  &&  inv_dir  =  1  &&  inv_delay  =  15 then inv_x  =  inv_x  +  1
+ if inv_hit  =  0  &&  inv_dir  =  1  &&  inv_delay  =  30 then inv_x  =  inv_x  +  1
+
+ if inv_x  >  143 then inv_dir  =  0  :  inv_x  =  143  :  inv_y  =  inv_y  -  5
+
+
+ if inv_hit  =  0  &&  inv_dir  =  0  &&  inv_delay  =  15 then inv_x  =  inv_x  -  1
+ if inv_hit  =  0  &&  inv_dir  =  0  &&  inv_delay  =  30 then inv_x  =  inv_x  -  1
+
+ if inv_x  <  26 then inv_dir  =  1  :  inv_x  =  26  :  inv_y  =  inv_y  -  5
+
+
+ player0x  =  inv_x  -  8  :  player0y  =  inv_y
+ return
+
+
+
+
+draw__move_inv_shot
+
+ player2:
+ %00000000
+ %00000000
+ %00010000
+ %00100000
+ %00010000
+ %00001000
+ %00010000
+ %00000000
+end
+
+ COLUP2  =  14
+
+ inv_fire_delay  =  inv_fire_delay  +  1
+
+ if inv_fired  =  0  &&  inv_fire_delay  =  180 then inv_shot_x  =  inv_x  :  inv_shot_y  =  inv_y  -  9
+ if inv_fired  =  0  &&  inv_fire_delay  =  180 then player2x  =  inv_shot_x  :  player2y  =  inv_shot_y
+ if inv_fired  =  0  &&  inv_fire_delay  =  180 then inv_fired  =  1
+
+ if inv_fired  =  1 then inv_shot_y  =  inv_shot_y  -  2  :  player2y  =  inv_shot_y
+
+ if inv_shot_y  <  12 then inv_fired  =  0  :  inv_fire_delay  =  0  :  inv_shot_y  =  88  :  player2y  =  inv_shot_y
+
+ return
+
+
+
+
+col_shot_inv
+ if shot_x  +  3  >=  inv_x  &&  shot_x  +  3  <=  inv_x  +  6  &&  shot_y  >  inv_y then inv_hit  =  1
+
+ if inv_hit  =  1 then inv_blast_delay  =  inv_blast_delay  +  1
+
+ if inv_blast_delay  >  30 then score  =  score  +  10  :  inv_hit  =  0  :  gosub reset_blast
+
+ if inv_hit  =  1 then player0:  
+ %00000000
+ %10010010
+ %01010100
+ %00000000
+ %11010110
+ %00000000
+ %01010100
+ %10010010
+end
+
+ return
+
+
+
+
+reset_blast
+ player0:  
+ %00000000
+ %10000010
+ %01000100
+ %11111110
+ %11111110
+ %10111010
+ %01111100
+ %10000010
+end
+
+
+ inv_blast_delay  =  0  :  inv_x  =   ( rand & 117 )   +  26  :  inv_y  =  76
+
+ return
+
+
+
+
+draw__move_turret
+ player1:
+ %11111110
+ %11111110
+ %01111100
+ %00010000
+ %00000000
+ %00000000
+ %00000000
+ %00000000
+end
+
+
+ _COLUP1  =  196
+
+ if joy0left  &&  tur_x  >=  26 then tur_x  =  tur_x  -  1
+ if joy0right  &&  tur_x  <=  143 then tur_x  =  tur_x  +  1
+
+
+
+
+ player1x  =  tur_x  :  player1y  =  tur_y
+
+ return
+
+
+
+
+draw__move_turret_shot
+ player3:
+ %00000000
+ %00000000
+ %00000000
+ %00010000
+ %00010000
+ %00000000
+ %00000000
+ %00000000
+end
+
+ COLUP3  =  14
+
+ if joy0fire  &&  tur_fired  =  0 then tur_fired  =  1  :  shot_x  =  tur_x  :  shot_y  =  tur_y  +  1  :  player3x  =  shot_x  :  player3y  =  shot_y
+
+ if tur_fired  =  1 then shot_y  =  shot_y  +  2  :  player3x  =  shot_x  :  player3y  =  shot_y
+
+ if shot_y  >  77  &&  ! joy0fire then tur_fired  =  0  :  shot_y  =  0  :  player3y  =  shot_y
+
+ return
+
+
+
+
+col_inv_shot_turret
+
+ if inv_shot_x  +  4  >=  tur_x  &&  inv_shot_x  +  2  <=  tur_x  +  6  &&  inv_shot_y  -  5  <  tur_y  - 5 then tur_hit  =  1
+
+ if tur_hit  =  1 then tur_anim_playing  =  1  :  gosub play_tur_anim
+
+ return
+
+
+
+
+play_tur_anim
+ if tur_anim_frame  =  0  ||  tur_anim_frame  =  20  ||  tur_anim_frame  =  40 then player1:
+ %10110110
+ %01001010
+ %00100100
+ %10010000
+ %01000100
+ %00000000
+ %00000000
+ %00000000
+end
+
+ if tur_anim_frame  =  10  ||  tur_anim_frame  =  30  ||  tur_anim_frame  =  50 then player1:
+ %11101010
+ %00010100
+ %01000000
+ %00000100
+ %00100000
+ %00000000
+ %00000000
+ %00000000
+end
+
+ tur_anim_frame  =  tur_anim_frame  +  1
+
+
+
+
+
+
+
+
+
+
+ return
+
+
+
+game_over
+
+ if joy0up then reboot
+
+
+
+ player2:
+ %00000000
+ %00000000
+ %00000000
+ %00000000
+ %00000000
+ %11111000
+ %10000000
+ %11000000
+ %10000000
+ %11111000
+ %00000000
+ %10001000
+ %10001000
+ %10101000
+ %11111000
+ %00000000
+ %10001000
+ %11111000
+ %10001000
+ %11111000
+ %00000000
+ %11111000
+ %10001000
+ %10000000
+ %11111000
+end
+
+ player3:
+ %00000000
+ %00000000
+ %00000000
+ %00000000
+ %00000000
+ %10001000
+ %11110000
+ %10001000
+ %11111000
+ %00000000
+ %11111000
+ %10000000
+ %11000000
+ %10000000
+ %11111000
+ %00000000
+ %00100000
+ %01010000
+ %10001000
+ %10001000
+ %00000000
+ %11111000
+ %10001000
+ %10001000
+ %11111000
+end
+
+ player0x  =  0  :  player0y  =  0
+ player1x  =  0  :  player1y  =  0
+ COLUP0  =  0
+ COLUP1  =  0
+
+ player2x  =  85  :  player2y  =  66
+ player3x  =  85  :  player3y  =  39
+
+ drawscreen
+
+ goto game_over

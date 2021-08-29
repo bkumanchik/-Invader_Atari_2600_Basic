@@ -1,7 +1,7 @@
 ; Started 8/25/21 Invader Atari 2600 Batari Basic using Visual bB IDE 
 
 
-; to do: turret explosion - reset in center, life meter?, sound
+; to do: sound
 
  
  ; Kernel setup (for using more than 2 players - allows sprites 0 through 5) (swaps Y direction for screen)
@@ -11,42 +11,59 @@
  set kernel multisprite
  set romsize 8k
 
+ ; enables pf score bars
+ const pfscore = 0
+
 
 ; misc. variables --
- scorecolor = 14 
- ;score      = 3
- dim _sc3 = score+2
+ dim reducing_lives   = p : p = 0 ; reducing_lives - set to false
+ ; sets pfscore2 (right bar - 1 is left bar) 
+ pfscore2 = %00101010 ; 3 lives instead of the default 4 (%10101010)
  
 ; invader variables --
- dim inv_x           = a : a = 84
- dim inv_y           = b : b = 76 ; 88(top of screen) - 11(original sprite distance from top) 
- dim inv_delay       = c : c = 0
- dim inv_dir         = f : f = 1
- dim inv_shot_x      = g : g = 0
- dim inv_shot_y      = h : h = 0
- dim inv_fire_delay  = k : k = 0
- dim inv_fired       = l : l = 0
- dim inv_hit         = n : n = 0
- dim inv_blast_delay = o : o = 0
+ dim inv_x            = a : a = 84
+ dim inv_y            = b : b = 76 ; 88(top of screen) - 11(original sprite distance from top) 
+ dim inv_delay        = c : c = 0
+ dim inv_dir          = f : f = 1
+ dim inv_shot_x       = g : g = inv_x
+ dim inv_shot_y       = h : h = inv_y
+ dim inv_fire_delay   = k : k = 0
+ dim inv_fired        = l : l = 0
+ dim inv_hit          = n : n = 0
+ dim inv_blast_delay  = o : o = 0
  
 ; turret variables --
- dim tur_x     = d : d = 84
- dim tur_y     = e : e = 14 ; 0(bottom of screen) - 8(sprite height) - 3(original sprite distance from bottom)
- dim shot_x    = i : i = tur_x
- dim shot_y    = j : j = tur_y
- dim tur_fired = m : m = 0
+ dim tur_x            = d : d = 84
+ dim tur_y            = e : e = 14 ; 0(bottom of screen) - 8(sprite height) - 3(original sprite distance from bottom)
+ dim shot_x           = i : i = tur_x
+ dim shot_y           = j : j = tur_y
+ dim tur_fired        = m : m = 0
+ dim tur_hit	    = q : q = 0 
+ dim tur_anim_playing = r : r = 0
+ dim tur_anim_frame   = s : s = 0
+ ;dim tur_anim_count   = t : t = 0
+
 
 
 ; -- main loop -------------------------------------------------------------------------------
 main 
  
- gosub draw__move_turret 
- gosub draw__move_turret_shot
+ if tur_hit = 0 then gosub draw__move_turret 
+ if tur_hit = 0 then gosub draw__move_turret_shot
  gosub draw__move_invader
  gosub draw__move_inv_shot
  gosub col_shot_inv
+ gosub col_inv_shot_turret
+ if tur_hit = 1 then gosub play_tur_anim
 
- if _sc3 >= 70 then goto game_over
+ if pfscore2 < 2 then goto game_over
+
+ ; pf score color - green
+ pfscorecolor = 196 
+
+ ; score color - white
+ scorecolor = 152
+
 
  drawscreen
 
@@ -145,7 +162,7 @@ col_shot_inv
 
  if inv_hit = 1 then inv_blast_delay = inv_blast_delay + 1
 
- if inv_blast_delay > 30 then score = score + 10 : inv_hit = 0 : gosub reset_blast 
+ if inv_blast_delay > 40 then score = score + 10 : inv_hit = 0 : gosub reset_blast 
 
  if inv_hit = 1 then player0:  
  %00000000
@@ -204,7 +221,7 @@ end
  ;if joy0up   then tur_y = tur_y + 1
  ;if joy0down then tur_y = tur_y - 1
  
- player1x = tur_x : player1y = tur_y 
+ if tur_hit = 0 then player1x = tur_x : player1y = tur_y 
  
  return
 
@@ -233,13 +250,97 @@ end
 
  return
 
+ 
+
+; check collision between invader shot and turret
+col_inv_shot_turret
+
+ if inv_shot_x + 4 >= tur_x  && inv_shot_x + 2 <= tur_x + 6 && inv_shot_y - 5 < tur_y -5 then tur_hit = 1 
+
+ return
+
+
+
+; play turret explode anim 3 times
+play_tur_anim 
+ 
+ tur_anim_frame = tur_anim_frame + 1
+
+ if tur_anim_frame = 10 then player1:
+ %10110110
+ %01001010
+ %00100100
+ %10010000
+ %01000100
+ %00000000
+ %00000000
+ %00000000
+end
+
+ if tur_anim_frame = 20 then player1:
+ %11101010
+ %00010100
+ %01000000
+ %00000100
+ %00100000
+ %00000000
+ %00000000
+ %00000000
+end
+
+ if tur_anim_frame = 30 then player1:
+ %10110110
+ %01001010
+ %00100100
+ %10010000
+ %01000100
+ %00000000
+ %00000000
+ %00000000
+end
+
+ if tur_anim_frame = 40 then player1:
+ %11101010
+ %00010100
+ %01000000
+ %00000100
+ %00100000
+ %00000000
+ %00000000
+ %00000000
+end
+
+ if tur_anim_frame = 50 then player1:
+ %10110110
+ %01001010
+ %00100100
+ %10010000
+ %01000100
+ %00000000
+ %00000000
+ %00000000
+end
+
+ if tur_anim_frame = 60 then player1:
+ %11101010
+ %00010100
+ %01000000
+ %00000100
+ %00100000
+ %00000000
+ %00000000
+ %00000000
+end
+
+ if tur_anim_frame = 60 then tur_anim_frame = 0 : tur_hit = 0 : pfscore2 = pfscore2 / 4 : tur_x = 84 : tur_y = 14
+
+ return
+
 
 
 game_over
 
- if joy0up then reboot
-
- score = 50
+ if joy0up then reboot 
  
  player2:
  %00000000

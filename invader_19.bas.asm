@@ -70,17 +70,7 @@ game
 .
  ; 
 
-.
- ; 
-
-.L04 ;  scorecolor  =  14
-
-	LDA #14
-	STA scorecolor
-.
- ; 
-
-.L05 ;  dim _sc3  =  score + 2
+.L04 ;  const pfscore  =  0
 
 .
  ; 
@@ -88,43 +78,63 @@ game
 .
  ; 
 
-.L06 ;  dim inv_x  =  a  :  a  =  84
+.
+ ; 
+
+.L05 ;  dim reducing_lives  =  p  :  p  =  0
+
+	LDA #0
+	STA p
+.
+ ; 
+
+.L06 ;  pfscore2  =  %00101010
+
+	LDA #%00101010
+	STA pfscore2
+.
+ ; 
+
+.
+ ; 
+
+.L07 ;  dim inv_x  =  a  :  a  =  84
 
 	LDA #84
 	STA a
-.L07 ;  dim inv_y  =  b  :  b  =  76
+.L08 ;  dim inv_y  =  b  :  b  =  76
 
 	LDA #76
 	STA b
-.L08 ;  dim inv_delay  =  c  :  c  =  0
+.L09 ;  dim inv_delay  =  c  :  c  =  0
 
 	LDA #0
 	STA c
-.L09 ;  dim inv_dir  =  f  :  f  =  1
+.L010 ;  dim inv_dir  =  f  :  f  =  1
 
 	LDA #1
 	STA f
-.L010 ;  dim inv_shot_x  =  g  :  g  =  0
+.L011 ;  dim inv_shot_x  =  g  :  g  =  inv_x
 
-	LDA #0
+	LDA inv_x
 	STA g
-.L011 ;  dim inv_shot_y  =  h  :  h  =  0
+.L012 ;  dim inv_shot_y  =  h  :  h  =  inv_y
 
-	LDA #0
+	LDA inv_y
 	STA h
-.L012 ;  dim inv_fire_delay  =  k  :  k  =  0
+.L013 ;  dim inv_fire_delay  =  k  :  k  =  0
 
 	LDA #0
 	STA k
-.L013 ;  dim inv_fired  =  l  :  l  =  0
+.L014 ;  dim inv_fired  =  l  :  l  =  0
 
 	LDA #0
 	STA l
-.L014 ;  dim inv_hit  =  n  :  n  =  0
+.L015 ;  dim inv_hit  =  n  :  n  =  0
 
 	LDA #0
 	STA n
-.L015 ;  dim inv_blast_delay  =  o  :  o  =  0
+.L016 ;  dim inv_blast_delay  =  o  :  o  =  0
 
 	LDA #0
 	STA o
@@ -134,26 +144,44 @@ game
 .
  ; 
 
-.L016 ;  dim tur_x  =  d  :  d  =  84
+.L017 ;  dim tur_x  =  d  :  d  =  84
 
 	LDA #84
 	STA d
-.L017 ;  dim tur_y  =  e  :  e  =  14
+.L018 ;  dim tur_y  =  e  :  e  =  14
 
 	LDA #14
 	STA e
-.L018 ;  dim shot_x  =  i  :  i  =  tur_x
+.L019 ;  dim shot_x  =  i  :  i  =  tur_x
 
 	LDA tur_x
 	STA i
-.L019 ;  dim shot_y  =  j  :  j  =  tur_y
+.L020 ;  dim shot_y  =  j  :  j  =  tur_y
 
 	LDA tur_y
 	STA j
-.L020 ;  dim tur_fired  =  m  :  m  =  0
+.L021 ;  dim tur_fired  =  m  :  m  =  0
 
 	LDA #0
 	STA m
+.L022 ;  dim tur_hit  =  q  :  q  =  0
+
+	LDA #0
+	STA q
+.L023 ;  dim tur_anim_playing  =  r  :  r  =  0
+
+	LDA #0
+	STA r
+.L024 ;  dim tur_anim_frame  =  s  :  s  =  0
+
+	LDA #0
+	STA s
+.
+ ; 
+
+.
+ ; 
+
 .
  ; 
 
@@ -169,42 +197,66 @@ game
 .
  ; 
 
-.L021 ;  gosub draw__move_turret
+.L025 ;  gosub draw__move_turret
 
  jsr .draw__move_turret
 
-.L022 ;  gosub draw__move_turret_shot
+.L026 ;  gosub draw__move_turret_shot
 
  jsr .draw__move_turret_shot
 
-.L023 ;  gosub draw__move_invader
+.L027 ;  gosub draw__move_invader
 
  jsr .draw__move_invader
 
-.L024 ;  gosub draw__move_inv_shot
+.L028 ;  gosub draw__move_inv_shot
 
  jsr .draw__move_inv_shot
 
-.L025 ;  gosub col_shot_inv
+.L029 ;  gosub col_shot_inv
 
  jsr .col_shot_inv
 
+.L030 ;  gosub col_inv_shot_turret
+
+ jsr .col_inv_shot_turret
+
 .
  ; 
 
-.L026 ;  if _sc3  >=  70 then goto game_over
-
-	LDA _sc3
-	CMP #70
-     BCC .skipL026
-.condpart0
- jmp .game_over
-
-.skipL026
 .
  ; 
 
-.L027 ;  drawscreen
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.L031 ;  pfscorecolor  =  196
+
+	LDA #196
+	STA pfscorecolor
+.
+ ; 
+
+.
+ ; 
+
+.L032 ;  scorecolor  =  152
+
+	LDA #152
+	STA scorecolor
+.
+ ; 
+
+.
+ ; 
+
+.L033 ;  drawscreen
 
  sta temp7
  lda #>(ret_point1-1)
@@ -225,7 +277,7 @@ ret_point1
 .
  ; 
 
-.L028 ;  goto main
+.L034 ;  goto main
 
  jmp .main
 
@@ -256,7 +308,7 @@ ret_point1
 .
  ; 
 
-.L029 ;  inv_delay  =  inv_delay  +  1
+.L035 ;  inv_delay  =  inv_delay  +  1
 
 	INC inv_delay
 .
@@ -265,67 +317,67 @@ ret_point1
 .
  ; 
 
-.L030 ;  if inv_delay  =  15  &&  inv_hit  =  0 then player0:  
+.L036 ;  if inv_delay  =  15  &&  inv_hit  =  0 then player0:  
 
 	LDA inv_delay
 	CMP #15
-     BNE .skipL030
-.condpart1
+     BNE .skipL036
+.condpart0
 	LDA inv_hit
 	CMP #0
-     BNE .skip1then
-.condpart2
-	LDX #<player2then_0
+     BNE .skip0then
+.condpart1
+	LDX #<player1then_0
 	STX player0pointerlo
-	LDA #>player2then_0
+	LDA #>player1then_0
 	STA player0pointerhi
 	LDA #9
 	STA player0height
-.skip1then
-.skipL030
+.skip0then
+.skipL036
 .
  ; 
 
 .
  ; 
 
-.L031 ;  if inv_delay  =  30  &&  inv_hit  =  0 then player0:  
+.L037 ;  if inv_delay  =  30  &&  inv_hit  =  0 then player0:  
 
 	LDA inv_delay
 	CMP #30
-     BNE .skipL031
-.condpart3
+     BNE .skipL037
+.condpart2
 	LDA inv_hit
 	CMP #0
-     BNE .skip3then
-.condpart4
-	LDX #<player4then_0
+     BNE .skip2then
+.condpart3
+	LDX #<player3then_0
 	STX player0pointerlo
-	LDA #>player4then_0
+	LDA #>player3then_0
 	STA player0pointerhi
 	LDA #9
 	STA player0height
-.skip3then
-.skipL031
+.skip2then
+.skipL037
 .
  ; 
 
-.L032 ;  if inv_delay  >  30 then inv_delay  =  0
+.L038 ;  if inv_delay  >  30 then inv_delay  =  0
 
 	LDA #30
 	CMP inv_delay
-     BCS .skipL032
-.condpart5
+     BCS .skipL038
+.condpart4
 	LDA #0
 	STA inv_delay
-.skipL032
+.skipL038
 .
  ; 
 
 .
  ; 
 
-.L033 ;  COLUP0  =  52
+.L039 ;  COLUP0  =  52
 
 	LDA #52
 	STA COLUP0
@@ -335,51 +387,51 @@ ret_point1
 .
  ; 
 
-.L034 ;  if inv_hit  =  0  &&  inv_dir  =  1  &&  inv_delay  =  15 then inv_x  =  inv_x  +  1
+.L040 ;  if inv_hit  =  0  &&  inv_dir  =  1  &&  inv_delay  =  15 then inv_x  =  inv_x  +  1
 
 	LDA inv_hit
 	CMP #0
-     BNE .skipL034
-.condpart6
+     BNE .skipL040
+.condpart5
 	LDA inv_dir
 	CMP #1
-     BNE .skip6then
-.condpart7
+     BNE .skip5then
+.condpart6
 	LDA inv_delay
 	CMP #15
-     BNE .skip7then
-.condpart8
+     BNE .skip6then
+.condpart7
 	INC inv_x
-.skip7then
 .skip6then
-.skipL034
-.L035 ;  if inv_hit  =  0  &&  inv_dir  =  1  &&  inv_delay  =  30 then inv_x  =  inv_x  +  1
+.skip5then
+.skipL040
+.L041 ;  if inv_hit  =  0  &&  inv_dir  =  1  &&  inv_delay  =  30 then inv_x  =  inv_x  +  1
 
 	LDA inv_hit
 	CMP #0
-     BNE .skipL035
-.condpart9
+     BNE .skipL041
+.condpart8
 	LDA inv_dir
 	CMP #1
-     BNE .skip9then
-.condpart10
+     BNE .skip8then
+.condpart9
 	LDA inv_delay
 	CMP #30
-     BNE .skip10then
-.condpart11
+     BNE .skip9then
+.condpart10
 	INC inv_x
-.skip10then
 .skip9then
-.skipL035
+.skip8then
+.skipL041
 .
  ; 
 
-.L036 ;  if inv_x  >  143 then inv_dir  =  0  :  inv_x  =  143  :  inv_y  =  inv_y  -  5
+.L042 ;  if inv_x  >  143 then inv_dir  =  0  :  inv_x  =  143  :  inv_y  =  inv_y  -  5
 
 	LDA #143
 	CMP inv_x
-     BCS .skipL036
-.condpart12
+     BCS .skipL042
+.condpart11
 	LDA #0
 	STA inv_dir
 	LDA #143
@@ -388,58 +440,58 @@ ret_point1
 	SEC
 	SBC #5
 	STA inv_y
-.skipL036
+.skipL042
 .
  ; 
 
 .
  ; 
 
-.L037 ;  if inv_hit  =  0  &&  inv_dir  =  0  &&  inv_delay  =  15 then inv_x  =  inv_x  -  1
+.L043 ;  if inv_hit  =  0  &&  inv_dir  =  0  &&  inv_delay  =  15 then inv_x  =  inv_x  -  1
 
 	LDA inv_hit
 	CMP #0
-     BNE .skipL037
-.condpart13
+     BNE .skipL043
+.condpart12
 	LDA inv_dir
 	CMP #0
-     BNE .skip13then
-.condpart14
+     BNE .skip12then
+.condpart13
 	LDA inv_delay
 	CMP #15
-     BNE .skip14then
-.condpart15
+     BNE .skip13then
+.condpart14
 	DEC inv_x
-.skip14then
 .skip13then
-.skipL037
-.L038 ;  if inv_hit  =  0  &&  inv_dir  =  0  &&  inv_delay  =  30 then inv_x  =  inv_x  -  1
+.skip12then
+.skipL043
+.L044 ;  if inv_hit  =  0  &&  inv_dir  =  0  &&  inv_delay  =  30 then inv_x  =  inv_x  -  1
 
 	LDA inv_hit
 	CMP #0
-     BNE .skipL038
-.condpart16
+     BNE .skipL044
+.condpart15
 	LDA inv_dir
 	CMP #0
-     BNE .skip16then
-.condpart17
+     BNE .skip15then
+.condpart16
 	LDA inv_delay
 	CMP #30
-     BNE .skip17then
-.condpart18
+     BNE .skip16then
+.condpart17
 	DEC inv_x
-.skip17then
 .skip16then
-.skipL038
+.skip15then
+.skipL044
 .
  ; 
 
-.L039 ;  if inv_x  <  26 then inv_dir  =  1  :  inv_x  =  26  :  inv_y  =  inv_y  -  5
+.L045 ;  if inv_x  <  26 then inv_dir  =  1  :  inv_x  =  26  :  inv_y  =  inv_y  -  5
 
 	LDA inv_x
 	CMP #26
-     BCS .skipL039
-.condpart19
+     BCS .skipL045
+.condpart18
 	LDA #1
 	STA inv_dir
 	LDA #26
@@ -448,14 +500,14 @@ ret_point1
 	SEC
 	SBC #5
 	STA inv_y
-.skipL039
+.skipL045
 .
  ; 
 
 .
  ; 
 
-.L040 ;  player0x  =  inv_x  -  8  :  player0y  =  inv_y
+.L046 ;  player0x  =  inv_x  -  8  :  player0y  =  inv_y
 
 	LDA inv_x
 	SEC
@@ -463,7 +515,7 @@ ret_point1
 	STA player0x
 	LDA inv_y
 	STA player0y
-.L041 ;  return
+.L047 ;  return
 
 	tsx
 	lda 2,x ; check return address
@@ -490,103 +542,103 @@ ret_point1
 .
  ; 
 
-.L042 ;  player2:
+.L048 ;  player2:
 
-	LDX #<playerL042_2
+	LDX #<playerL048_2
 	STX player2pointerlo
-	LDA #>playerL042_2
+	LDA #>playerL048_2
 	STA player2pointerhi
 	LDA #9
 	STA player2height
 .
  ; 
 
-.L043 ;  COLUP2  =  14
+.L049 ;  COLUP2  =  14
 
 	LDA #14
 	STA COLUP2
 .
  ; 
 
-.L044 ;  inv_fire_delay  =  inv_fire_delay  +  1
+.L050 ;  inv_fire_delay  =  inv_fire_delay  +  1
 
 	INC inv_fire_delay
 .
  ; 
 
-.L045 ;  if inv_fired  =  0  &&  inv_fire_delay  =  180 then inv_shot_x  =  inv_x  :  inv_shot_y  =  inv_y  -  9
+.L051 ;  if inv_fired  =  0  &&  inv_fire_delay  =  180 then inv_shot_x  =  inv_x  :  inv_shot_y  =  inv_y  -  9
 
 	LDA inv_fired
 	CMP #0
-     BNE .skipL045
-.condpart20
+     BNE .skipL051
+.condpart19
 	LDA inv_fire_delay
 	CMP #180
-     BNE .skip20then
-.condpart21
+     BNE .skip19then
+.condpart20
 	LDA inv_x
 	STA inv_shot_x
 	LDA inv_y
 	SEC
 	SBC #9
 	STA inv_shot_y
-.skip20then
-.skipL045
-.L046 ;  if inv_fired  =  0  &&  inv_fire_delay  =  180 then player2x  =  inv_shot_x  :  player2y  =  inv_shot_y
+.skip19then
+.skipL051
+.L052 ;  if inv_fired  =  0  &&  inv_fire_delay  =  180 then player2x  =  inv_shot_x  :  player2y  =  inv_shot_y
 
 	LDA inv_fired
 	CMP #0
-     BNE .skipL046
-.condpart22
+     BNE .skipL052
+.condpart21
 	LDA inv_fire_delay
 	CMP #180
-     BNE .skip22then
-.condpart23
+     BNE .skip21then
+.condpart22
 	LDA inv_shot_x
 	STA player2x
 	LDA inv_shot_y
 	STA player2y
-.skip22then
-.skipL046
-.L047 ;  if inv_fired  =  0  &&  inv_fire_delay  =  180 then inv_fired  =  1
+.skip21then
+.skipL052
+.L053 ;  if inv_fired  =  0  &&  inv_fire_delay  =  180 then inv_fired  =  1
 
 	LDA inv_fired
 	CMP #0
-     BNE .skipL047
-.condpart24
+     BNE .skipL053
+.condpart23
 	LDA inv_fire_delay
 	CMP #180
-     BNE .skip24then
-.condpart25
+     BNE .skip23then
+.condpart24
 	LDA #1
 	STA inv_fired
-.skip24then
-.skipL047
+.skip23then
+.skipL053
 .
  ; 
 
-.L048 ;  if inv_fired  =  1 then inv_shot_y  =  inv_shot_y  -  2  :  player2y  =  inv_shot_y
+.L054 ;  if inv_fired  =  1 then inv_shot_y  =  inv_shot_y  -  2  :  player2y  =  inv_shot_y
 
 	LDA inv_fired
 	CMP #1
-     BNE .skipL048
-.condpart26
+     BNE .skipL054
+.condpart25
 	LDA inv_shot_y
 	SEC
 	SBC #2
 	STA inv_shot_y
 	LDA inv_shot_y
 	STA player2y
-.skipL048
+.skipL054
 .
  ; 
 
-.L049 ;  if inv_shot_y  <  12 then inv_fired  =  0  :  inv_fire_delay  =  0  :  inv_shot_y  =  88  :  player2y  =  inv_shot_y
+.L055 ;  if inv_shot_y  <  12 then inv_fired  =  0  :  inv_fire_delay  =  0  :  inv_shot_y  =  88  :  player2y  =  inv_shot_y
 
 	LDA inv_shot_y
 	CMP #12
-     BCS .skipL049
-.condpart27
+     BCS .skipL055
+.condpart26
 	LDA #0
 	STA inv_fired
 	STA inv_fire_delay
@@ -594,11 +646,11 @@ ret_point1
 	STA inv_shot_y
 	LDA inv_shot_y
 	STA player2y
-.skipL049
+.skipL055
 .
  ; 
 
-.L050 ;  return
+.L056 ;  return
 
 	tsx
 	lda 2,x ; check return address
@@ -622,7 +674,7 @@ ret_point1
 .col_shot_inv
  ; col_shot_inv
 
-.L051 ;  if shot_x  +  3  >=  inv_x  &&  shot_x  +  3  <=  inv_x  +  6  &&  shot_y  >  inv_y then inv_hit  =  1
+.L057 ;  if shot_x  +  3  >=  inv_x  &&  shot_x  +  3  <=  inv_x  +  6  &&  shot_y  >  inv_y then inv_hit  =  1
 
 ; complex condition detected
 	LDA shot_x
@@ -630,8 +682,8 @@ ret_point1
 	ADC #3
 ; todo: this LDA is spurious and should be prevented ->	LDA  1,x
 	CMP inv_x
-     BCC .skipL051
-.condpart28
+     BCC .skipL057
+.condpart27
 ; complex condition detected
 	LDA inv_x
 	CLC
@@ -646,37 +698,37 @@ ret_point1
   PLA
 ; todo: this LDA is spurious and should be prevented ->	LDA  2,x
 	CMP  1,x
-     BCC .skip28then
-.condpart29
+     BCC .skip27then
+.condpart28
 	LDA inv_y
 	CMP shot_y
-     BCS .skip29then
-.condpart30
+     BCS .skip28then
+.condpart29
 	LDA #1
 	STA inv_hit
-.skip29then
 .skip28then
-.skipL051
+.skip27then
+.skipL057
 .
  ; 
 
-.L052 ;  if inv_hit  =  1 then inv_blast_delay  =  inv_blast_delay  +  1
+.L058 ;  if inv_hit  =  1 then inv_blast_delay  =  inv_blast_delay  +  1
 
 	LDA inv_hit
 	CMP #1
-     BNE .skipL052
-.condpart31
+     BNE .skipL058
+.condpart30
 	INC inv_blast_delay
-.skipL052
+.skipL058
 .
  ; 
 
-.L053 ;  if inv_blast_delay  >  30 then score  =  score  +  10  :  inv_hit  =  0  :  gosub reset_blast
+.L059 ;  if inv_blast_delay  >  30 then score  =  score  +  10  :  inv_hit  =  0  :  gosub reset_blast
 
 	LDA #30
 	CMP inv_blast_delay
-     BCS .skipL053
-.condpart32
+     BCS .skipL059
+.condpart31
 	SED
 	CLC
 	LDA score+2
@@ -693,27 +745,27 @@ ret_point1
 	STA inv_hit
  jsr .reset_blast
 
-.skipL053
+.skipL059
 .
  ; 
 
-.L054 ;  if inv_hit  =  1 then player0:  
+.L060 ;  if inv_hit  =  1 then player0:  
 
 	LDA inv_hit
 	CMP #1
-     BNE .skipL054
-.condpart33
-	LDX #<player33then_0
+     BNE .skipL060
+.condpart32
+	LDX #<player32then_0
 	STX player0pointerlo
-	LDA #>player33then_0
+	LDA #>player32then_0
 	STA player0pointerhi
 	LDA #9
 	STA player0height
-.skipL054
+.skipL060
 .
  ; 
 
-.L055 ;  return
+.L061 ;  return
 
 	tsx
 	lda 2,x ; check return address
@@ -737,11 +789,11 @@ ret_point1
 .reset_blast
  ; reset_blast
 
-.L056 ;  player0:  
+.L062 ;  player0:  
 
-	LDX #<playerL056_0
+	LDX #<playerL062_0
 	STX player0pointerlo
-	LDA #>playerL056_0
+	LDA #>playerL062_0
 	STA player0pointerhi
 	LDA #9
 	STA player0height
@@ -751,7 +803,7 @@ ret_point1
 .
  ; 
 
-.L057 ;  inv_blast_delay  =  0  :  inv_x  =   ( rand & 117 )   +  26  :  inv_y  =  76
+.L063 ;  inv_blast_delay  =  0  :  inv_x  =   ( rand & 117 )   +  26  :  inv_y  =  76
 
 	LDA #0
 	STA inv_blast_delay
@@ -781,7 +833,7 @@ ret_point2
 .
  ; 
 
-.L058 ;  return
+.L064 ;  return
 
 	tsx
 	lda 2,x ; check return address
@@ -805,11 +857,11 @@ ret_point2
 .draw__move_turret
  ; draw__move_turret
 
-.L059 ;  player1:
+.L065 ;  player1:
 
-	LDX #<playerL059_1
+	LDX #<playerL065_1
 	STX player1pointerlo
-	LDA #>playerL059_1
+	LDA #>playerL065_1
 	STA player1pointerhi
 	LDA #9
 	STA player1height
@@ -819,37 +871,37 @@ ret_point2
 .
  ; 
 
-.L060 ;  _COLUP1  =  196
+.L066 ;  _COLUP1  =  196
 
 	LDA #196
 	STA _COLUP1
 .
  ; 
 
-.L061 ;  if joy0left  &&  tur_x  >=  26 then tur_x  =  tur_x  -  1
+.L067 ;  if joy0left  &&  tur_x  >=  26 then tur_x  =  tur_x  -  1
 
  bit SWCHA
-	BVS .skipL061
-.condpart34
+	BVS .skipL067
+.condpart33
 	LDA tur_x
 	CMP #26
-     BCC .skip34then
-.condpart35
+     BCC .skip33then
+.condpart34
 	DEC tur_x
-.skip34then
-.skipL061
-.L062 ;  if joy0right  &&  tur_x  <=  143 then tur_x  =  tur_x  +  1
+.skip33then
+.skipL067
+.L068 ;  if joy0right  &&  tur_x  <=  143 then tur_x  =  tur_x  +  1
 
  bit SWCHA
-	BMI .skipL062
-.condpart36
+	BMI .skipL068
+.condpart35
 	LDA #143
 	CMP tur_x
-     BCC .skip36then
-.condpart37
+     BCC .skip35then
+.condpart36
 	INC tur_x
-.skip36then
-.skipL062
+.skip35then
+.skipL068
 .
  ; 
 
@@ -862,16 +914,21 @@ ret_point2
 .
  ; 
 
-.L063 ;  player1x  =  tur_x  :  player1y  =  tur_y
+.L069 ;  if tur_hit  =  0 then player1x  =  tur_x  :  player1y  =  tur_y
 
+	LDA tur_hit
+	CMP #0
+     BNE .skipL069
+.condpart37
 	LDA tur_x
 	STA player1x
 	LDA tur_y
 	STA player1y
+.skipL069
 .
  ; 
 
-.L064 ;  return
+.L070 ;  return
 
 	tsx
 	lda 2,x ; check return address
@@ -895,28 +952,28 @@ ret_point2
 .draw__move_turret_shot
  ; draw__move_turret_shot
 
-.L065 ;  player3:
+.L071 ;  player3:
 
-	LDX #<playerL065_3
+	LDX #<playerL071_3
 	STX player3pointerlo
-	LDA #>playerL065_3
+	LDA #>playerL071_3
 	STA player3pointerhi
 	LDA #9
 	STA player3height
 .
  ; 
 
-.L066 ;  COLUP3  =  14
+.L072 ;  COLUP3  =  14
 
 	LDA #14
 	STA COLUP3
 .
  ; 
 
-.L067 ;  if joy0fire  &&  tur_fired  =  0 then tur_fired  =  1  :  shot_x  =  tur_x  :  shot_y  =  tur_y  +  1  :  player3x  =  shot_x  :  player3y  =  shot_y
+.L073 ;  if joy0fire  &&  tur_fired  =  0 then tur_fired  =  1  :  shot_x  =  tur_x  :  shot_y  =  tur_y  +  1  :  player3x  =  shot_x  :  player3y  =  shot_y
 
  bit INPT4
-	BMI .skipL067
+	BMI .skipL073
 .condpart38
 	LDA tur_fired
 	CMP #0
@@ -935,15 +992,15 @@ ret_point2
 	LDA shot_y
 	STA player3y
 .skip38then
-.skipL067
+.skipL073
 .
  ; 
 
-.L068 ;  if tur_fired  =  1 then shot_y  =  shot_y  +  2  :  player3x  =  shot_x  :  player3y  =  shot_y
+.L074 ;  if tur_fired  =  1 then shot_y  =  shot_y  +  2  :  player3x  =  shot_x  :  player3y  =  shot_y
 
 	LDA tur_fired
 	CMP #1
-     BNE .skipL068
+     BNE .skipL074
 .condpart40
 	LDA shot_y
 	CLC
@@ -953,15 +1010,15 @@ ret_point2
 	STA player3x
 	LDA shot_y
 	STA player3y
-.skipL068
+.skipL074
 .
  ; 
 
-.L069 ;  if shot_y  >  77  &&  ! joy0fire then tur_fired  =  0  :  shot_y  =  0  :  player3y  =  shot_y
+.L075 ;  if shot_y  >  77  &&  ! joy0fire then tur_fired  =  0  :  shot_y  =  0  :  player3y  =  shot_y
 
 	LDA #77
 	CMP shot_y
-     BCS .skipL069
+     BCS .skipL075
 .condpart41
  bit INPT4
 	BPL .skip41then
@@ -972,11 +1029,172 @@ ret_point2
 	LDA shot_y
 	STA player3y
 .skip41then
-.skipL069
+.skipL075
 .
  ; 
 
-.L070 ;  return
+.L076 ;  return
+
+	tsx
+	lda 2,x ; check return address
+	eor #(>*) ; vs. current PCH
+	and #$E0 ;  mask off all but top 3 bits
+	beq *+5 ; if equal, do normal return
+	JMP BS_return
+	RTS
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.col_inv_shot_turret
+ ; col_inv_shot_turret
+
+.
+ ; 
+
+.L077 ;  if inv_shot_x  +  4  >=  tur_x  &&  inv_shot_x  +  2  <=  tur_x  +  6  &&  inv_shot_y  -  5  <  tur_y  - 5 then tur_hit  =  1  :  goto game_over
+
+; complex condition detected
+	LDA inv_shot_x
+	CLC
+	ADC #4
+; todo: this LDA is spurious and should be prevented ->	LDA  1,x
+	CMP tur_x
+     BCC .skipL077
+.condpart43
+; complex condition detected
+	LDA tur_x
+	CLC
+	ADC #6
+  PHA
+	LDA inv_shot_x
+	CLC
+	ADC #2
+  PHA
+  TSX
+  PLA
+  PLA
+; todo: this LDA is spurious and should be prevented ->	LDA  2,x
+	CMP  1,x
+     BCC .skip43then
+.condpart44
+; complex condition detected
+	LDA inv_shot_y
+	SEC
+	SBC #5
+  PHA
+	LDA tur_y
+	SEC
+	SBC #5
+  PHA
+  TSX
+  PLA
+  PLA
+	CMP  1,x
+     BCS .skip44then
+.condpart45
+	LDA #1
+	STA tur_hit
+ jmp .game_over
+
+.skip44then
+.skip43then
+.skipL077
+.
+ ; 
+
+.L078 ;  return
+
+	tsx
+	lda 2,x ; check return address
+	eor #(>*) ; vs. current PCH
+	and #$E0 ;  mask off all but top 3 bits
+	beq *+5 ; if equal, do normal return
+	JMP BS_return
+	RTS
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.play_tur_anim
+ ; play_tur_anim
+
+.L079 ;  if tur_anim_frame  =  30 then player1:
+
+	LDA tur_anim_frame
+	CMP #30
+     BNE .skipL079
+.condpart46
+	LDX #<player46then_1
+	STX player1pointerlo
+	LDA #>player46then_1
+	STA player1pointerhi
+	LDA #9
+	STA player1height
+.skipL079
+.
+ ; 
+
+.L080 ;  if tur_anim_frame  =  60 then player1:
+
+	LDA tur_anim_frame
+	CMP #60
+     BNE .skipL080
+.condpart47
+	LDX #<player47then_1
+	STX player1pointerlo
+	LDA #>player47then_1
+	STA player1pointerhi
+	LDA #9
+	STA player1height
+.skipL080
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.L081 ;  return
 
 	tsx
 	lda 2,x ; check return address
@@ -1000,78 +1218,73 @@ ret_point2
 .
  ; 
 
-.L071 ;  if joy0up then reboot
+.L082 ;  if joy0up then reboot
 
  lda #$10
  bit SWCHA
-	BNE .skipL071
-.condpart43
+	BNE .skipL082
+.condpart48
 	JMP ($FFFC)
-.skipL071
+.skipL082
 .
  ; 
 
-.L072 ;  score  =  50
-
-	LDA #$50
-	STA score+2
-	LDA #$00
-	STA score+1
-	LDA #$00
-	STA score
 .
  ; 
 
-.L073 ;  player2:
+.
+ ; 
 
-	LDX #<playerL073_2
+.L083 ;  player2:
+
+	LDX #<playerL083_2
 	STX player2pointerlo
-	LDA #>playerL073_2
+	LDA #>playerL083_2
 	STA player2pointerhi
 	LDA #26
 	STA player2height
 .
  ; 
 
-.L074 ;  player3:
+.L084 ;  player3:
 
-	LDX #<playerL074_3
+	LDX #<playerL084_3
 	STX player3pointerlo
-	LDA #>playerL074_3
+	LDA #>playerL084_3
 	STA player3pointerhi
 	LDA #26
 	STA player3height
 .
  ; 
 
-.L075 ;  player0x  =  0  :  player0y  =  0
+.L085 ;  player0x  =  0  :  player0y  =  0
 
 	LDA #0
 	STA player0x
 	STA player0y
-.L076 ;  player1x  =  0  :  player1y  =  0
+.L086 ;  player1x  =  0  :  player1y  =  0
 
 	LDA #0
 	STA player1x
 	STA player1y
-.L077 ;  COLUP0  =  0
+.L087 ;  COLUP0  =  0
 
 	LDA #0
 	STA COLUP0
-.L078 ;  COLUP1  =  0
+.L088 ;  COLUP1  =  0
 
 	LDA #0
 	STA COLUP1
 .
  ; 
 
-.L079 ;  player2x  =  85  :  player2y  =  66
+.L089 ;  player2x  =  85  :  player2y  =  66
 
 	LDA #85
 	STA player2x
 	LDA #66
 	STA player2y
-.L080 ;  player3x  =  85  :  player3y  =  39
+.L090 ;  player3x  =  85  :  player3y  =  39
 
 	LDA #85
 	STA player3x
@@ -1080,7 +1293,7 @@ ret_point2
 .
  ; 
 
-.L081 ;  drawscreen
+.L091 ;  drawscreen
 
  sta temp7
  lda #>(ret_point3-1)
@@ -1101,7 +1314,7 @@ ret_point3
 .
  ; 
 
-.L082 ;  goto game_over
+.L092 ;  goto game_over
 
  jmp .game_over
 
@@ -2342,7 +2555,7 @@ noeor
 	.byte 0
 	repend
 	endif
-player2then_0
+player1then_0
 	.byte 0
 	.byte  %00000000
 	.byte  %10000010
@@ -2362,7 +2575,7 @@ player2then_0
 	.byte 0
 	repend
 	endif
-player4then_0
+player3then_0
 	.byte 0
 	.byte  %00000000
 	.byte  %00101000
@@ -2382,7 +2595,7 @@ player4then_0
 	.byte 0
 	repend
 	endif
-playerL042_2
+playerL048_2
 	.byte  %00000000
 	.byte  %00000000
 	.byte  %00010000
@@ -2401,7 +2614,7 @@ playerL042_2
 	.byte 0
 	repend
 	endif
-player33then_0
+player32then_0
 	.byte 0
 	.byte  %00000000
 	.byte  %10010010
@@ -2421,7 +2634,7 @@ player33then_0
 	.byte 0
 	repend
 	endif
-playerL056_0
+playerL062_0
 	.byte 0
 	.byte  %00000000
 	.byte  %10000010
@@ -2441,7 +2654,7 @@ playerL056_0
 	.byte 0
 	repend
 	endif
-playerL059_1
+playerL065_1
 	.byte  %11111110
 	.byte  %11111110
 	.byte  %01111100
@@ -2460,12 +2673,50 @@ playerL059_1
 	.byte 0
 	repend
 	endif
-playerL065_3
+playerL071_3
 	.byte  %00000000
 	.byte  %00000000
 	.byte  %00000000
 	.byte  %00010000
 	.byte  %00010000
+	.byte  %00000000
+	.byte  %00000000
+	.byte  %00000000
+ if (<*) > (<(*+7))
+	repeat ($100-<*)
+	.byte 0
+	repend
+	endif
+ if (<*) < 90
+	repeat (90-<*)
+	.byte 0
+	repend
+	endif
+player46then_1
+	.byte  %10110110
+	.byte  %01001010
+	.byte  %00100100
+	.byte  %10010000
+	.byte  %01000100
+	.byte  %00000000
+	.byte  %00000000
+	.byte  %00000000
+ if (<*) > (<(*+7))
+	repeat ($100-<*)
+	.byte 0
+	repend
+	endif
+ if (<*) < 90
+	repeat (90-<*)
+	.byte 0
+	repend
+	endif
+player47then_1
+	.byte  %11101010
+	.byte  %00010100
+	.byte  %01000000
+	.byte  %00000100
+	.byte  %00100000
 	.byte  %00000000
 	.byte  %00000000
 	.byte  %00000000
@@ -2479,7 +2730,7 @@ playerL065_3
 	.byte 0
 	repend
 	endif
-playerL073_2
+playerL083_2
 	.byte  %00000000
 	.byte  %00000000
 	.byte  %00000000
@@ -2515,7 +2766,7 @@ playerL073_2
 	.byte 0
 	repend
 	endif
-playerL074_3
+playerL084_3
 	.byte  %00000000
 	.byte  %00000000
 	.byte  %00000000
