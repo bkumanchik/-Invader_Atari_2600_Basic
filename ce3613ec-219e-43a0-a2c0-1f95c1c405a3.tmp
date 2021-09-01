@@ -1,0 +1,44 @@
+
+
+
+ dim sounda  =  a  :  sounda  =  32
+
+main
+
+ AUDV0  =  0
+
+ if sounda  >= 132 then goto _skip_0_131
+
+ if sounda  <=  31 then sounda  =  sounda  +  1  :  AUDC0  =  8  :  AUDV0  =  4  :  AUDF0  =  sounda - 1
+ if sounda  >= 33  &&  sounda  <=  64 then sounda  =  sounda  +  1  :  AUDC0  =  4  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 34 ) 
+ if sounda  >= 66  &&  sounda  <=  97 then sounda  =  sounda  +  1  :  AUDC0  =  2  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 67 )   ) 
+ goto _skip_132_255
+
+
+_skip_0_131
+ if sounda  >= 132  &&  sounda  <=  163 then sounda  =  sounda  +  1  :  AUDC0  =  7  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 133 ) 
+
+ if sounda  >=  165  &&  sounda  <=  196 then sounda  =  sounda  -  1  :  AUDC0  =  7  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 164 ) 
+ if sounda  >=  198  &&  sounda  <=  229 then sounda  =  sounda  -  1  :  AUDC0  =  8  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 197 ) 
+
+ if sounda  >=  231 then sounda  =  sounda  -  1  :  AUDC0  =  10  :  AUDV0  =  4  :  AUDF0  =  sounda - 230
+ if sounda  =  230 then sounda = 255
+
+
+_skip_132_255
+ if !joy0fire  &&  !joy0up  &&  !joy0down  &&  !joy0left  &&  !joy0right then b{3} = 1
+
+
+ if b{3}  &&  joy0fire then b{3} = 0 : sounda  =  0
+ if b{3}  &&  joy0right then b{3} = 0 : sounda  =  33
+ if b{3}  &&  joy0up then b{3} = 0 : sounda  =  66
+
+
+ if joy1fire then sounda  =  32
+
+
+ drawscreen
+
+
+
+ goto main

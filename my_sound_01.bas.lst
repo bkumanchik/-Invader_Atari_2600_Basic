@@ -1,4 +1,4 @@
-------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\simplesound2.bas.asm LEVEL 1 PASS 2
+------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\my_sound_01.bas.asm LEVEL 1 PASS 2
       1  10000 ????						; Provided under the CC0 license. See the included LICENSE.txt for details.
       2  10000 ????
       3  10000 ????				       processor	6502
@@ -206,7 +206,7 @@
     200  10000 ????				       SEG
     201  10000 ????
     202  10000 ????						; EOF
-------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\simplesound2.bas.asm
+------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\my_sound_01.bas.asm
 ------- FILE macro.h LEVEL 2 PASS 2
       0  10000 ????				       include	"macro.h"
       1  10000 ????						; Provided under the CC0 license. See the included LICENSE.txt for details.
@@ -357,7 +357,7 @@
     146  10000 ????				       ENDM
     147  10000 ????
     148  10000 ????						; EOF
-------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\simplesound2.bas.asm
+------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\my_sound_01.bas.asm
 ------- FILE 2600basic.h LEVEL 2 PASS 2
       0  10000 ????				       include	"2600basic.h"
       1  10000 ????						; Provided under the CC0 license. See the included LICENSE.txt for details.
@@ -724,13 +724,6 @@
       1  10000 ????						; This file contains variable mapping and other information for the current project.
       2  10000 ????
       3  10000 ????		00 d4	    sounda     =	a
-      4  10000 ????
-      5  10000 ????		00 95	    _sc3       =	score + 2
-      6  10000 ????
-      7  10000 ????		00 94	    _sc2       =	score + 1
-      8  10000 ????
-      9  10000 ????		00 93	    _sc1       =	score
-     10  10000 ????
 ------- FILE 2600basic.h
       7  10000 ????
       8  10000 ????		00 80	    player0x   =	$80
@@ -960,20 +953,13 @@
     232  10000 ????			   -	       else
     233  10000 ????			   -playfield  =	playfieldbase-(pfres-12*(4/pfwidth))*pfwidth
     234  10000 ????				       endif
-------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\simplesound2.bas.asm
+------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\my_sound_01.bas.asm
 ------- FILE 2600basic_variable_redefs.h LEVEL 2 PASS 2
       0  10000 ????				       include	"2600basic_variable_redefs.h"
       1  10000 ????						; This file contains variable mapping and other information for the current project.
       2  10000 ????
       3  10000 ????		00 d4	    sounda     =	a
-      4  10000 ????
-      5  10000 ????		00 95	    _sc3       =	score + 2
-      6  10000 ????
-      7  10000 ????		00 94	    _sc2       =	score + 1
-      8  10000 ????
-      9  10000 ????		00 93	    _sc1       =	score
-     10  10000 ????
-------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\simplesound2.bas.asm
+------- FILE C:\Atari2600Dev\my_projects\Invader_Atari_2600_Basic\my_sound_01.bas.asm
       8  10000 ????			   -	       ifconst	bankswitch
       9  10000 ????			   -	       if	bankswitch == 8
      10  10000 ????			   -	       ORG	$1000
@@ -2854,952 +2840,322 @@
    1642  f45d				   .
    1643  f45d							; 
    1644  f45d
-   1645  f45d				   .
-   1646  f45d							; 
-   1647  f45d
-   1648  f45d				   .L00 		;  dim _sc1  =  score
-   1649  f45d
-   1650  f45d				   .L01 		;  dim _sc2  =  score + 1
-   1651  f45d
-   1652  f45d				   .L02 		;  dim _sc3  =  score + 2
-   1653  f45d
-   1654  f45d				   .
-   1655  f45d							; 
-   1656  f45d
-   1657  f45d				   .L03 		;  rem /** Declare the variable for sound. **/
-   1658  f45d
-   1659  f45d				   .L04 		;  dim sounda	=  a
-   1660  f45d
-   1661  f45d				   .L05 		;  sounda  =  32
-   1662  f45d
-   1663  f45d		       a9 20		      LDA	#32
-   1664  f45f		       85 d4		      STA	sounda
-   1665  f461				   .L06 		;  rem  The C variable is just used for displaying what frequency is being played and the goto's are just for saving cycles, don't know what () does but I've seen it used like that 
-   1666  f461
-   1667  f461				   .
-   1668  f461							; 
-   1669  f461
-   1670  f461				   .main
-   1671  f461							; main
-   1672  f461
-   1673  f461				   .L07 		;  scorecolor	=  scorecolor  +  1
-   1674  f461
-   1675  f461		       e6 a3		      INC	scorecolor
-   1676  f463				   .L08 		;  AUDV0  =  0
-   1677  f463
-   1678  f463		       a9 00		      LDA	#0
-   1679  f465		       85 19		      STA	AUDV0
-   1680  f467				   .L09 		;  if sounda  >= 132 then goto _skip_0_131
-   1681  f467
-   1682  f467		       a5 d4		      LDA	sounda
-   1683  f469		       c9 84		      CMP	#132
-   1684  f46b		       90 03		      BCC	.skipL09
-   1685  f46d				   .condpart0
-   1686  f46d		       4c fb f4 	      jmp	._skip_0_131
-   1687  f470
-   1688  f470				   .skipL09
-   1689  f470				   .L010		;  rem /** increase value.  Kill sound if frequency 31 has been played  **/
-   1690  f470
-   1691  f470				   .L011		;  if sounda  <=  31 then sounda  =  sounda  +  1  :  AUDC0  =  8  :  AUDV0  =  4  :  AUDF0  =  sounda - 1  : c = sounda - 1
-   1692  f470
-   1693  f470		       a9 1f		      LDA	#31
-   1694  f472		       c5 d4		      CMP	sounda
-   1695  f474		       90 18		      BCC	.skipL011
-   1696  f476				   .condpart1
-   1697  f476		       e6 d4		      INC	sounda
-   1698  f478		       a9 08		      LDA	#8
-   1699  f47a		       85 15		      STA	AUDC0
-   1700  f47c		       a9 04		      LDA	#4
-   1701  f47e		       85 19		      STA	AUDV0
-   1702  f480		       a5 d4		      LDA	sounda
-   1703  f482		       38		      SEC
-   1704  f483		       e9 01		      SBC	#1
-   1705  f485		       85 17		      STA	AUDF0
-   1706  f487		       a5 d4		      LDA	sounda
-   1707  f489		       38		      SEC
-   1708  f48a		       e9 01		      SBC	#1
-   1709  f48c		       85 d6		      STA	c
-   1710  f48e				   .skipL011
-   1711  f48e				   .L012		;  if sounda  >= 33  &&  sounda  <=  64 then sounda  =  sounda  +  1  :  AUDC0  =  4  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 34 )   : c = sounda - 34
-   1712  f48e
-   1713  f48e		       a5 d4		      LDA	sounda
-   1714  f490		       c9 21		      CMP	#33
-   1715  f492		       90 1c		      BCC	.skipL012
-   1716  f494				   .condpart2
-   1717  f494		       a9 40		      LDA	#64
-   1718  f496		       c5 d4		      CMP	sounda
-   1719  f498		       90 16		      BCC	.skip2then
-   1720  f49a				   .condpart3
-   1721  f49a		       e6 d4		      INC	sounda
-   1722  f49c		       a9 04		      LDA	#4
-   1723  f49e		       85 15		      STA	AUDC0
-   1724  f4a0		       85 19		      STA	AUDV0
-   1725  f4a2							; complex statement detected
-   1726  f4a2		       a5 d4		      LDA	sounda
-   1727  f4a4		       38		      SEC
-   1728  f4a5		       e9 22		      SBC	#34
-   1729  f4a7		       85 17		      STA	AUDF0
-   1730  f4a9		       a5 d4		      LDA	sounda
-   1731  f4ab		       38		      SEC
-   1732  f4ac		       e9 22		      SBC	#34
-   1733  f4ae		       85 d6		      STA	c
-   1734  f4b0				   .skip2then
-   1735  f4b0				   .skipL012
-   1736  f4b0				   .L013		;  if sounda  >= 66  &&  sounda  <=  97 then sounda  =  sounda  +  1  :  AUDC0  =  2  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 67 )   : c = sounda - 67
-   1737  f4b0
-   1738  f4b0		       a5 d4		      LDA	sounda
-   1739  f4b2		       c9 42		      CMP	#66
-   1740  f4b4		       90 1e		      BCC	.skipL013
-   1741  f4b6				   .condpart4
-   1742  f4b6		       a9 61		      LDA	#97
-   1743  f4b8		       c5 d4		      CMP	sounda
-   1744  f4ba		       90 18		      BCC	.skip4then
-   1745  f4bc				   .condpart5
-   1746  f4bc		       e6 d4		      INC	sounda
-   1747  f4be		       a9 02		      LDA	#2
-   1748  f4c0		       85 15		      STA	AUDC0
-   1749  f4c2		       a9 04		      LDA	#4
-   1750  f4c4		       85 19		      STA	AUDV0
-   1751  f4c6							; complex statement detected
-   1752  f4c6		       a5 d4		      LDA	sounda
-   1753  f4c8		       38		      SEC
-   1754  f4c9		       e9 43		      SBC	#67
-   1755  f4cb		       85 17		      STA	AUDF0
-   1756  f4cd		       a5 d4		      LDA	sounda
-   1757  f4cf		       38		      SEC
-   1758  f4d0		       e9 43		      SBC	#67
-   1759  f4d2		       85 d6		      STA	c
-   1760  f4d4				   .skip4then
-   1761  f4d4				   .skipL013
-   1762  f4d4				   .L014		;  if sounda  >= 99  &&  sounda  <=  130 then sounda  =  sounda  +  1	:  AUDC0  =  1	:  AUDV0  =  4	:  AUDF0  =   ( sounda - 100 )	 : c = sounda - 100
-   1763  f4d4
-   1764  f4d4		       a5 d4		      LDA	sounda
-   1765  f4d6		       c9 63		      CMP	#99
-   1766  f4d8		       90 1e		      BCC	.skipL014
-   1767  f4da				   .condpart6
-   1768  f4da		       a9 82		      LDA	#130
-   1769  f4dc		       c5 d4		      CMP	sounda
-   1770  f4de		       90 18		      BCC	.skip6then
-   1771  f4e0				   .condpart7
-   1772  f4e0		       e6 d4		      INC	sounda
-   1773  f4e2		       a9 01		      LDA	#1
-   1774  f4e4		       85 15		      STA	AUDC0
-   1775  f4e6		       a9 04		      LDA	#4
-   1776  f4e8		       85 19		      STA	AUDV0
-   1777  f4ea							; complex statement detected
-   1778  f4ea		       a5 d4		      LDA	sounda
-   1779  f4ec		       38		      SEC
-   1780  f4ed		       e9 64		      SBC	#100
-   1781  f4ef		       85 17		      STA	AUDF0
-   1782  f4f1		       a5 d4		      LDA	sounda
-   1783  f4f3		       38		      SEC
-   1784  f4f4		       e9 64		      SBC	#100
-   1785  f4f6		       85 d6		      STA	c
-   1786  f4f8				   .skip6then
-   1787  f4f8				   .skipL014
-   1788  f4f8				   .L015		;  goto _skip_132_255
-   1789  f4f8
-   1790  f4f8		       4c 8f f5 	      jmp	._skip_132_255
-   1791  f4fb
-   1792  f4fb				   ._skip_0_131
-   1793  f4fb							; _skip_0_131
-   1794  f4fb
-   1795  f4fb				   .L016		;  if sounda  >= 132  &&  sounda  <=  163 then sounda	=  sounda  +  1  :  AUDC0  =  7  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 133 )   : c = sounda - 133
-   1796  f4fb
-   1797  f4fb		       a5 d4		      LDA	sounda
-   1798  f4fd		       c9 84		      CMP	#132
-   1799  f4ff		       90 1e		      BCC	.skipL016
-   1800  f501				   .condpart8
-   1801  f501		       a9 a3		      LDA	#163
-   1802  f503		       c5 d4		      CMP	sounda
-   1803  f505		       90 18		      BCC	.skip8then
-   1804  f507				   .condpart9
-   1805  f507		       e6 d4		      INC	sounda
-   1806  f509		       a9 07		      LDA	#7
-   1807  f50b		       85 15		      STA	AUDC0
-   1808  f50d		       a9 04		      LDA	#4
-   1809  f50f		       85 19		      STA	AUDV0
-   1810  f511							; complex statement detected
-   1811  f511		       a5 d4		      LDA	sounda
-   1812  f513		       38		      SEC
-   1813  f514		       e9 85		      SBC	#133
-   1814  f516		       85 17		      STA	AUDF0
-   1815  f518		       a5 d4		      LDA	sounda
-   1816  f51a		       38		      SEC
-   1817  f51b		       e9 85		      SBC	#133
-   1818  f51d		       85 d6		      STA	c
-   1819  f51f				   .skip8then
-   1820  f51f				   .skipL016
-   1821  f51f				   .L017		;  rem /** decrease value.  Kill sound if frequency 0 has been played	**/
-   1822  f51f
-   1823  f51f				   .L018		;  if sounda  >= 165  &&  sounda  <=  196 then sounda	=  sounda  -  1  :  AUDC0  =  7  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 164 )   : c = sounda - 164
-   1824  f51f
-   1825  f51f		       a5 d4		      LDA	sounda
-   1826  f521		       c9 a5		      CMP	#165
-   1827  f523		       90 1e		      BCC	.skipL018
-   1828  f525				   .condpart10
-   1829  f525		       a9 c4		      LDA	#196
-   1830  f527		       c5 d4		      CMP	sounda
-   1831  f529		       90 18		      BCC	.skip10then
-   1832  f52b				   .condpart11
-   1833  f52b		       c6 d4		      DEC	sounda
-   1834  f52d		       a9 07		      LDA	#7
-   1835  f52f		       85 15		      STA	AUDC0
-   1836  f531		       a9 04		      LDA	#4
-   1837  f533		       85 19		      STA	AUDV0
-   1838  f535							; complex statement detected
-   1839  f535		       a5 d4		      LDA	sounda
-   1840  f537		       38		      SEC
-   1841  f538		       e9 a4		      SBC	#164
-   1842  f53a		       85 17		      STA	AUDF0
-   1843  f53c		       a5 d4		      LDA	sounda
-   1844  f53e		       38		      SEC
-   1845  f53f		       e9 a4		      SBC	#164
-   1846  f541		       85 d6		      STA	c
-   1847  f543				   .skip10then
-   1848  f543				   .skipL018
-   1849  f543				   .L019		;  if sounda  >= 198  &&  sounda  <=  229 then sounda	=  sounda  -  1  :  AUDC0  =  8  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 197 )   : c = sounda - 197
-   1850  f543
-   1851  f543		       a5 d4		      LDA	sounda
-   1852  f545		       c9 c6		      CMP	#198
-   1853  f547		       90 1e		      BCC	.skipL019
-   1854  f549				   .condpart12
-   1855  f549		       a9 e5		      LDA	#229
-   1856  f54b		       c5 d4		      CMP	sounda
-   1857  f54d		       90 18		      BCC	.skip12then
-   1858  f54f				   .condpart13
-   1859  f54f		       c6 d4		      DEC	sounda
-   1860  f551		       a9 08		      LDA	#8
-   1861  f553		       85 15		      STA	AUDC0
-   1862  f555		       a9 04		      LDA	#4
-   1863  f557		       85 19		      STA	AUDV0
-   1864  f559							; complex statement detected
-   1865  f559		       a5 d4		      LDA	sounda
-   1866  f55b		       38		      SEC
-   1867  f55c		       e9 c5		      SBC	#197
-   1868  f55e		       85 17		      STA	AUDF0
-   1869  f560		       a5 d4		      LDA	sounda
-   1870  f562		       38		      SEC
-   1871  f563		       e9 c5		      SBC	#197
-   1872  f565		       85 d6		      STA	c
-   1873  f567				   .skip12then
-   1874  f567				   .skipL019
-   1875  f567				   .L020		;  rem  Short loop
-   1876  f567
-   1877  f567				   .L021		;  if sounda  >= 231 then sounda  =  sounda  -  1  :  AUDC0  =  10  :	AUDV0  =  4  :	AUDF0  =  sounda - 230	: c = sounda - 230
-   1878  f567
-   1879  f567		       a5 d4		      LDA	sounda
-   1880  f569		       c9 e7		      CMP	#231
-   1881  f56b		       90 18		      BCC	.skipL021
-   1882  f56d				   .condpart14
-   1883  f56d		       c6 d4		      DEC	sounda
-   1884  f56f		       a9 0a		      LDA	#10
-   1885  f571		       85 15		      STA	AUDC0
-   1886  f573		       a9 04		      LDA	#4
-   1887  f575		       85 19		      STA	AUDV0
-   1888  f577		       a5 d4		      LDA	sounda
-   1889  f579		       38		      SEC
-   1890  f57a		       e9 e6		      SBC	#230
-   1891  f57c		       85 17		      STA	AUDF0
-   1892  f57e		       a5 d4		      LDA	sounda
-   1893  f580		       38		      SEC
-   1894  f581		       e9 e6		      SBC	#230
-   1895  f583		       85 d6		      STA	c
-   1896  f585				   .skipL021
-   1897  f585				   .L022		;  if sounda  = 230 then sounda = 255
-   1898  f585
-   1899  f585		       a5 d4		      LDA	sounda
-   1900  f587		       c9 e6		      CMP	#230
-   1901  f589		       d0 04		      BNE	.skipL022
-   1902  f58b				   .condpart15
-   1903  f58b		       a9 ff		      LDA	#255
-   1904  f58d		       85 d4		      STA	sounda
-   1905  f58f				   .skipL022
-   1906  f58f				   ._skip_132_255
-   1907  f58f							; _skip_132_255
-   1908  f58f
-   1909  f58f				   .
-   1910  f58f							; 
-   1911  f58f
-   1912  f58f				   .
-   1913  f58f							; 
-   1914  f58f
-   1915  f58f				   .L023		;  if !joy0fire  &&  !joy0right  &&  !joy0up  &&  !joy0down  &&  !joy0left  &&  !joy1left  &&	!joy1up  &&  !joy1down then b{3} = 1
-   1916  f58f
-   1917  f58f		       24 0c		      bit	INPT4
-   1918  f591		       10 33		      BPL	.skipL023
-   1919  f593				   .condpart16
-   1920  f593		       2c 80 02 	      bit	SWCHA
-   1921  f596		       10 2e		      BPL	.skip16then
-   1922  f598				   .condpart17
-   1923  f598		       a9 10		      lda	#$10
-   1924  f59a		       2c 80 02 	      bit	SWCHA
-   1925  f59d		       f0 27		      BEQ	.skip17then
-   1926  f59f				   .condpart18
-   1927  f59f		       a9 20		      lda	#$20
-   1928  f5a1		       2c 80 02 	      bit	SWCHA
-   1929  f5a4		       f0 20		      BEQ	.skip18then
-   1930  f5a6				   .condpart19
-   1931  f5a6		       2c 80 02 	      bit	SWCHA
-   1932  f5a9		       50 1b		      BVC	.skip19then
-   1933  f5ab				   .condpart20
-   1934  f5ab		       a9 04		      lda	#4
-   1935  f5ad		       2c 80 02 	      bit	SWCHA
-   1936  f5b0		       f0 14		      BEQ	.skip20then
-   1937  f5b2				   .condpart21
-   1938  f5b2		       a9 01		      lda	#1
-   1939  f5b4		       2c 80 02 	      bit	SWCHA
-   1940  f5b7		       f0 0d		      BEQ	.skip21then
-   1941  f5b9				   .condpart22
-   1942  f5b9		       a9 02		      lda	#2
-   1943  f5bb		       2c 80 02 	      bit	SWCHA
-   1944  f5be		       f0 06		      BEQ	.skip22then
-   1945  f5c0				   .condpart23
-   1946  f5c0		       a5 d5		      LDA	b
-   1947  f5c2		       09 08		      ORA	#8
-   1948  f5c4		       85 d5		      STA	b
-   1949  f5c6				   .skip22then
-   1950  f5c6				   .skip21then
-   1951  f5c6				   .skip20then
-   1952  f5c6				   .skip19then
-   1953  f5c6				   .skip18then
-   1954  f5c6				   .skip17then
-   1955  f5c6				   .skip16then
-   1956  f5c6				   .skipL023
-   1957  f5c6				   .
-   1958  f5c6							; 
-   1959  f5c6
-   1960  f5c6				   .L024		;  rem /** start playback of sound effects by putting a value in the sound variables **/
-   1961  f5c6
-   1962  f5c6				   .L025		;  if b{3}  &&  joy0fire then b{3} = 0 : sounda  =  0
-   1963  f5c6
-   1964  f5c6		       a5 d5		      LDA	b
-   1965  f5c8		       29 08		      AND	#8
-   1966  f5ca		       f0 0e		      BEQ	.skipL025
-   1967  f5cc				   .condpart24
-   1968  f5cc		       24 0c		      bit	INPT4
-   1969  f5ce		       30 0a		      BMI	.skip24then
-   1970  f5d0				   .condpart25
-   1971  f5d0		       a5 d5		      LDA	b
-   1972  f5d2		       29 f7		      AND	#247
-   1973  f5d4		       85 d5		      STA	b
-   1974  f5d6		       a9 00		      LDA	#0
-   1975  f5d8		       85 d4		      STA	sounda
-   1976  f5da				   .skip24then
-   1977  f5da				   .skipL025
-   1978  f5da				   .L026		;  if b{3}  &&  joy0right then b{3} = 0 : sounda  =  33
-   1979  f5da
-   1980  f5da		       a5 d5		      LDA	b
-   1981  f5dc		       29 08		      AND	#8
-   1982  f5de		       f0 0f		      BEQ	.skipL026
-   1983  f5e0				   .condpart26
-   1984  f5e0		       2c 80 02 	      bit	SWCHA
-   1985  f5e3		       30 0a		      BMI	.skip26then
-   1986  f5e5				   .condpart27
-   1987  f5e5		       a5 d5		      LDA	b
-   1988  f5e7		       29 f7		      AND	#247
-   1989  f5e9		       85 d5		      STA	b
-   1990  f5eb		       a9 21		      LDA	#33
-   1991  f5ed		       85 d4		      STA	sounda
-   1992  f5ef				   .skip26then
-   1993  f5ef				   .skipL026
-   1994  f5ef				   .L027		;  if b{3}  &&  joy0up then b{3} = 0 : sounda	=  66
-   1995  f5ef
-   1996  f5ef		       a5 d5		      LDA	b
-   1997  f5f1		       29 08		      AND	#8
-   1998  f5f3		       f0 11		      BEQ	.skipL027
-   1999  f5f5				   .condpart28
-   2000  f5f5		       a9 10		      lda	#$10
-   2001  f5f7		       2c 80 02 	      bit	SWCHA
-   2002  f5fa		       d0 0a		      BNE	.skip28then
-   2003  f5fc				   .condpart29
-   2004  f5fc		       a5 d5		      LDA	b
-   2005  f5fe		       29 f7		      AND	#247
-   2006  f600		       85 d5		      STA	b
-   2007  f602		       a9 42		      LDA	#66
-   2008  f604		       85 d4		      STA	sounda
-   2009  f606				   .skip28then
-   2010  f606				   .skipL027
-   2011  f606				   .L028		;  if b{3}  &&  joy0down then b{3} = 0 : sounda  =  99
-   2012  f606
-   2013  f606		       a5 d5		      LDA	b
-   2014  f608		       29 08		      AND	#8
-   2015  f60a		       f0 11		      BEQ	.skipL028
-   2016  f60c				   .condpart30
-   2017  f60c		       a9 20		      lda	#$20
-   2018  f60e		       2c 80 02 	      bit	SWCHA
-   2019  f611		       d0 0a		      BNE	.skip30then
-   2020  f613				   .condpart31
-   2021  f613		       a5 d5		      LDA	b
-   2022  f615		       29 f7		      AND	#247
-   2023  f617		       85 d5		      STA	b
-   2024  f619		       a9 63		      LDA	#99
-   2025  f61b		       85 d4		      STA	sounda
-   2026  f61d				   .skip30then
-   2027  f61d				   .skipL028
-   2028  f61d				   .L029		;  if b{3}  &&  joy0left then b{3} = 0 : sounda  =  132
-   2029  f61d
-   2030  f61d		       a5 d5		      LDA	b
-   2031  f61f		       29 08		      AND	#8
-   2032  f621		       f0 0f		      BEQ	.skipL029
-   2033  f623				   .condpart32
-   2034  f623		       2c 80 02 	      bit	SWCHA
-   2035  f626		       70 0a		      BVS	.skip32then
-   2036  f628				   .condpart33
-   2037  f628		       a5 d5		      LDA	b
-   2038  f62a		       29 f7		      AND	#247
-   2039  f62c		       85 d5		      STA	b
-   2040  f62e		       a9 84		      LDA	#132
-   2041  f630		       85 d4		      STA	sounda
-   2042  f632				   .skip32then
-   2043  f632				   .skipL029
-   2044  f632				   .
-   2045  f632							; 
-   2046  f632
-   2047  f632				   .L030		;  if b{3}  &&  joy1left then b{3} = 0 : sounda  =  196
-   2048  f632
-   2049  f632		       a5 d5		      LDA	b
-   2050  f634		       29 08		      AND	#8
-   2051  f636		       f0 11		      BEQ	.skipL030
-   2052  f638				   .condpart34
-   2053  f638		       a9 04		      lda	#4
-   2054  f63a		       2c 80 02 	      bit	SWCHA
-   2055  f63d		       d0 0a		      BNE	.skip34then
-   2056  f63f				   .condpart35
-   2057  f63f		       a5 d5		      LDA	b
-   2058  f641		       29 f7		      AND	#247
-   2059  f643		       85 d5		      STA	b
-   2060  f645		       a9 c4		      LDA	#196
-   2061  f647		       85 d4		      STA	sounda
-   2062  f649				   .skip34then
-   2063  f649				   .skipL030
-   2064  f649				   .L031		;  if b{3}  &&  joy1up then b{3} = 0 : sounda	=  229
-   2065  f649
-   2066  f649		       a5 d5		      LDA	b
-   2067  f64b		       29 08		      AND	#8
-   2068  f64d		       f0 11		      BEQ	.skipL031
-   2069  f64f				   .condpart36
-   2070  f64f		       a9 01		      lda	#1
-   2071  f651		       2c 80 02 	      bit	SWCHA
-   2072  f654		       d0 0a		      BNE	.skip36then
-   2073  f656				   .condpart37
-   2074  f656		       a5 d5		      LDA	b
-   2075  f658		       29 f7		      AND	#247
-   2076  f65a		       85 d5		      STA	b
-   2077  f65c		       a9 e5		      LDA	#229
-   2078  f65e		       85 d4		      STA	sounda
-   2079  f660				   .skip36then
-   2080  f660				   .skipL031
-   2081  f660				   .L032		;  if b{3}  &&  joy1down then b{3} = 0 : sounda  =  255
-   2082  f660
-   2083  f660		       a5 d5		      LDA	b
-   2084  f662		       29 08		      AND	#8
-   2085  f664		       f0 11		      BEQ	.skipL032
-   2086  f666				   .condpart38
-   2087  f666		       a9 02		      lda	#2
-   2088  f668		       2c 80 02 	      bit	SWCHA
-   2089  f66b		       d0 0a		      BNE	.skip38then
-   2090  f66d				   .condpart39
-   2091  f66d		       a5 d5		      LDA	b
-   2092  f66f		       29 f7		      AND	#247
-   2093  f671		       85 d5		      STA	b
-   2094  f673		       a9 ff		      LDA	#255
-   2095  f675		       85 d4		      STA	sounda
-   2096  f677				   .skip38then
-   2097  f677				   .skipL032
-   2098  f677				   .L033		;  rem  Kill loop or any other sound
-   2099  f677
-   2100  f677				   .L034		;  if joy1fire then sounda = 32 : c = 0
-   2101  f677
-   2102  f677		       24 0d		      bit	INPT5
-   2103  f679		       30 08		      BMI	.skipL034
-   2104  f67b				   .condpart40
-   2105  f67b		       a9 20		      LDA	#32
-   2106  f67d		       85 d4		      STA	sounda
-   2107  f67f		       a9 00		      LDA	#0
-   2108  f681		       85 d6		      STA	c
-   2109  f683				   .skipL034
-   2110  f683				   .L035		;  rem  32 65	98 131 164 and 197 works the same so you can just leave the counter there after the sound has played 
-   2111  f683
-   2112  f683				   .
-   2113  f683							; 
-   2114  f683
-   2115  f683				   .L036		;  temp4  =  sounda
-   2116  f683
-   2117  f683		       a5 d4		      LDA	sounda
-   2118  f685		       85 9f		      STA	temp4
-   2119  f687				   .
-   2120  f687							; 
-   2121  f687
-   2122  f687				   .L037		;  _sc1  =  0	:  _sc2  =  _sc2  &  15
-   2123  f687
-   2124  f687		       a9 00		      LDA	#0
-   2125  f689		       85 93		      STA	_sc1
-   2126  f68b		       a5 94		      LDA	_sc2
-   2127  f68d		       29 0f		      AND	#15
-   2128  f68f		       85 94		      STA	_sc2
-   2129  f691				   .L038		;  if temp4  >=  100 then _sc1  =  _sc1  +  16  :  temp4  =  temp4  -	100
-   2130  f691
-   2131  f691		       a5 9f		      LDA	temp4
-   2132  f693		       c9 64		      CMP	#100
-   2133  f695		       90 0e		      BCC	.skipL038
-   2134  f697				   .condpart41
-   2135  f697		       a5 93		      LDA	_sc1
-   2136  f699		       18		      CLC
-   2137  f69a		       69 10		      ADC	#16
-   2138  f69c		       85 93		      STA	_sc1
-   2139  f69e		       a5 9f		      LDA	temp4
-   2140  f6a0		       38		      SEC
-   2141  f6a1		       e9 64		      SBC	#100
-   2142  f6a3		       85 9f		      STA	temp4
-   2143  f6a5				   .skipL038
-   2144  f6a5				   .L039		;  if temp4  >=  100 then _sc1  =  _sc1  +  16  :  temp4  =  temp4  -	100
-   2145  f6a5
-   2146  f6a5		       a5 9f		      LDA	temp4
-   2147  f6a7		       c9 64		      CMP	#100
-   2148  f6a9		       90 0e		      BCC	.skipL039
-   2149  f6ab				   .condpart42
-   2150  f6ab		       a5 93		      LDA	_sc1
-   2151  f6ad		       18		      CLC
-   2152  f6ae		       69 10		      ADC	#16
-   2153  f6b0		       85 93		      STA	_sc1
-   2154  f6b2		       a5 9f		      LDA	temp4
-   2155  f6b4		       38		      SEC
-   2156  f6b5		       e9 64		      SBC	#100
-   2157  f6b7		       85 9f		      STA	temp4
-   2158  f6b9				   .skipL039
-   2159  f6b9				   .L040		;  if temp4  >=  50 then _sc1	=  _sc1  +  5  :  temp4  =  temp4  -  50
-   2160  f6b9
-   2161  f6b9		       a5 9f		      LDA	temp4
-   2162  f6bb		       c9 32		      CMP	#50
-   2163  f6bd		       90 0e		      BCC	.skipL040
-   2164  f6bf				   .condpart43
-   2165  f6bf		       a5 93		      LDA	_sc1
-   2166  f6c1		       18		      CLC
-   2167  f6c2		       69 05		      ADC	#5
-   2168  f6c4		       85 93		      STA	_sc1
-   2169  f6c6		       a5 9f		      LDA	temp4
-   2170  f6c8		       38		      SEC
-   2171  f6c9		       e9 32		      SBC	#50
-   2172  f6cb		       85 9f		      STA	temp4
-   2173  f6cd				   .skipL040
-   2174  f6cd				   .L041		;  if temp4  >=  30 then _sc1	=  _sc1  +  3  :  temp4  =  temp4  -  30
-   2175  f6cd
-   2176  f6cd		       a5 9f		      LDA	temp4
-   2177  f6cf		       c9 1e		      CMP	#30
-   2178  f6d1		       90 0e		      BCC	.skipL041
-   2179  f6d3				   .condpart44
-   2180  f6d3		       a5 93		      LDA	_sc1
-   2181  f6d5		       18		      CLC
-   2182  f6d6		       69 03		      ADC	#3
-   2183  f6d8		       85 93		      STA	_sc1
-   2184  f6da		       a5 9f		      LDA	temp4
-   2185  f6dc		       38		      SEC
-   2186  f6dd		       e9 1e		      SBC	#30
-   2187  f6df		       85 9f		      STA	temp4
-   2188  f6e1				   .skipL041
-   2189  f6e1				   .L042		;  if temp4  >=  20 then _sc1	=  _sc1  +  2  :  temp4  =  temp4  -  20
-   2190  f6e1
-   2191  f6e1		       a5 9f		      LDA	temp4
-   2192  f6e3		       c9 14		      CMP	#20
-   2193  f6e5		       90 0e		      BCC	.skipL042
-   2194  f6e7				   .condpart45
-   2195  f6e7		       a5 93		      LDA	_sc1
-   2196  f6e9		       18		      CLC
-   2197  f6ea		       69 02		      ADC	#2
-   2198  f6ec		       85 93		      STA	_sc1
-   2199  f6ee		       a5 9f		      LDA	temp4
-   2200  f6f0		       38		      SEC
-   2201  f6f1		       e9 14		      SBC	#20
-   2202  f6f3		       85 9f		      STA	temp4
-   2203  f6f5				   .skipL042
-   2204  f6f5				   .L043		;  if temp4  >=  10 then _sc1	=  _sc1  +  1  :  temp4  =  temp4  -  10
-   2205  f6f5
-   2206  f6f5		       a5 9f		      LDA	temp4
-   2207  f6f7		       c9 0a		      CMP	#10
-   2208  f6f9		       90 09		      BCC	.skipL043
-   2209  f6fb				   .condpart46
-   2210  f6fb		       e6 93		      INC	_sc1
-   2211  f6fd		       a5 9f		      LDA	temp4
-   2212  f6ff		       38		      SEC
-   2213  f700		       e9 0a		      SBC	#10
-   2214  f702		       85 9f		      STA	temp4
-   2215  f704				   .skipL043
-   2216  f704				   .L044		;  _sc2  =   ( temp4  *  4  *	4 )   |  _sc2
-   2217  f704
-   2218  f704							; complex statement detected
-   2219  f704		       a5 9f		      LDA	temp4
-   2220  f706		       0a		      asl
-   2221  f707		       0a		      asl
-   2222  f708		       0a		      asl
-   2223  f709		       0a		      asl
-   2224  f70a		       05 94		      ORA	_sc2
-   2225  f70c		       85 94		      STA	_sc2
-   2226  f70e				   .
-   2227  f70e							; 
-   2228  f70e
-   2229  f70e				   .L045		;  temp4  =  c
-   2230  f70e
-   2231  f70e		       a5 d6		      LDA	c
-   2232  f710		       85 9f		      STA	temp4
-   2233  f712				   .
-   2234  f712							; 
-   2235  f712
-   2236  f712				   .L046		;  _sc2  =  _sc2  &  240  :  _sc3  =  0
-   2237  f712
-   2238  f712		       a5 94		      LDA	_sc2
-   2239  f714		       29 f0		      AND	#240
-   2240  f716		       85 94		      STA	_sc2
-   2241  f718		       a9 00		      LDA	#0
-   2242  f71a		       85 95		      STA	_sc3
-   2243  f71c				   .L047		;  if temp4  >=  100 then _sc2  =  _sc2  +  1	:  temp4  =  temp4  -  100
-   2244  f71c
-   2245  f71c		       a5 9f		      LDA	temp4
-   2246  f71e		       c9 64		      CMP	#100
-   2247  f720		       90 09		      BCC	.skipL047
-   2248  f722				   .condpart47
-   2249  f722		       e6 94		      INC	_sc2
-   2250  f724		       a5 9f		      LDA	temp4
-   2251  f726		       38		      SEC
-   2252  f727		       e9 64		      SBC	#100
-   2253  f729		       85 9f		      STA	temp4
-   2254  f72b				   .skipL047
-   2255  f72b				   .L048		;  if temp4  >=  100 then _sc2  =  _sc2  +  1	:  temp4  =  temp4  -  100
-   2256  f72b
-   2257  f72b		       a5 9f		      LDA	temp4
-   2258  f72d		       c9 64		      CMP	#100
-   2259  f72f		       90 09		      BCC	.skipL048
-   2260  f731				   .condpart48
-   2261  f731		       e6 94		      INC	_sc2
-   2262  f733		       a5 9f		      LDA	temp4
-   2263  f735		       38		      SEC
-   2264  f736		       e9 64		      SBC	#100
-   2265  f738		       85 9f		      STA	temp4
-   2266  f73a				   .skipL048
-   2267  f73a				   .L049		;  if temp4  >=  50 then _sc3	=  _sc3  +  80	:  temp4  =  temp4  -  50
-   2268  f73a
-   2269  f73a		       a5 9f		      LDA	temp4
-   2270  f73c		       c9 32		      CMP	#50
-   2271  f73e		       90 0e		      BCC	.skipL049
-   2272  f740				   .condpart49
-   2273  f740		       a5 95		      LDA	_sc3
-   2274  f742		       18		      CLC
-   2275  f743		       69 50		      ADC	#80
-   2276  f745		       85 95		      STA	_sc3
-   2277  f747		       a5 9f		      LDA	temp4
-   2278  f749		       38		      SEC
-   2279  f74a		       e9 32		      SBC	#50
-   2280  f74c		       85 9f		      STA	temp4
-   2281  f74e				   .skipL049
-   2282  f74e				   .L050		;  if temp4  >=  30 then _sc3	=  _sc3  +  48	:  temp4  =  temp4  -  30
-   2283  f74e
-   2284  f74e		       a5 9f		      LDA	temp4
-   2285  f750		       c9 1e		      CMP	#30
-   2286  f752		       90 0e		      BCC	.skipL050
-   2287  f754				   .condpart50
-   2288  f754		       a5 95		      LDA	_sc3
-   2289  f756		       18		      CLC
-   2290  f757		       69 30		      ADC	#48
-   2291  f759		       85 95		      STA	_sc3
-   2292  f75b		       a5 9f		      LDA	temp4
-   2293  f75d		       38		      SEC
-   2294  f75e		       e9 1e		      SBC	#30
-   2295  f760		       85 9f		      STA	temp4
-   2296  f762				   .skipL050
-   2297  f762				   .L051		;  if temp4  >=  20 then _sc3	=  _sc3  +  32	:  temp4  =  temp4  -  20
-   2298  f762
-   2299  f762		       a5 9f		      LDA	temp4
-   2300  f764		       c9 14		      CMP	#20
-   2301  f766		       90 0e		      BCC	.skipL051
-   2302  f768				   .condpart51
-   2303  f768		       a5 95		      LDA	_sc3
-   2304  f76a		       18		      CLC
-   2305  f76b		       69 20		      ADC	#32
-   2306  f76d		       85 95		      STA	_sc3
-   2307  f76f		       a5 9f		      LDA	temp4
-   2308  f771		       38		      SEC
-   2309  f772		       e9 14		      SBC	#20
-   2310  f774		       85 9f		      STA	temp4
-   2311  f776				   .skipL051
-   2312  f776				   .L052		;  if temp4  >=  10 then _sc3	=  _sc3  +  16	:  temp4  =  temp4  -  10
-   2313  f776
-   2314  f776		       a5 9f		      LDA	temp4
-   2315  f778		       c9 0a		      CMP	#10
-   2316  f77a		       90 0e		      BCC	.skipL052
-   2317  f77c				   .condpart52
-   2318  f77c		       a5 95		      LDA	_sc3
-   2319  f77e		       18		      CLC
-   2320  f77f		       69 10		      ADC	#16
-   2321  f781		       85 95		      STA	_sc3
-   2322  f783		       a5 9f		      LDA	temp4
-   2323  f785		       38		      SEC
-   2324  f786		       e9 0a		      SBC	#10
-   2325  f788		       85 9f		      STA	temp4
-   2326  f78a				   .skipL052
-   2327  f78a				   .L053		;  _sc3  =  _sc3  |  temp4
-   2328  f78a
-   2329  f78a		       a5 95		      LDA	_sc3
-   2330  f78c		       05 9f		      ORA	temp4
-   2331  f78e		       85 95		      STA	_sc3
-   2332  f790				   .
-   2333  f790							; 
-   2334  f790
-   2335  f790				   .L054		;  drawscreen
-   2336  f790
-   2337  f790		       20 bd f3 	      jsr	drawscreen
-   2338  f793				   .
-   2339  f793							; 
-   2340  f793
-   2341  f793				   .L055		;  rem /** Start main program loop again **/
-   2342  f793
-   2343  f793				   .L056		;  goto main
-   2344  f793		       4c 61 f4 	      jmp	.main
-   2345  f796					      if	ECHOFIRST
-      2054 bytes of ROM space left
-   2346  f796					      echo	"    ",[(scoretable - *)]d , "bytes of ROM space left")
-   2347  f796					      endif
-   2348  f796		       00 01	   ECHOFIRST  =	1
-   2349  f796
-   2350  f796
-   2351  f796
-   2352  f796							; Provided under the CC0 license. See the included LICENSE.txt for details.
-   2353  f796
-   2354  f796							; feel free to modify the score graphics - just keep each digit 8 high
-   2355  f796							; and keep the conditional compilation stuff intact
-   2356  f796				  -	      ifconst	ROM2k
-   2357  f796				  -	      ORG	$F7AC-8
-   2358  f796					      else
-   2359  f796				  -	      ifconst	bankswitch
-   2360  f796				  -	      if	bankswitch == 8
-   2361  f796				  -	      ORG	$2F94-bscode_length
-   2362  f796				  -	      RORG	$FF94-bscode_length
-   2363  f796				  -	      endif
-   2364  f796				  -	      if	bankswitch == 16
-   2365  f796				  -	      ORG	$4F94-bscode_length
-   2366  f796				  -	      RORG	$FF94-bscode_length
-   2367  f796				  -	      endif
-   2368  f796				  -	      if	bankswitch == 32
-   2369  f796				  -	      ORG	$8F94-bscode_length
-   2370  f796				  -	      RORG	$FF94-bscode_length
-   2371  f796				  -	      endif
-   2372  f796				  -	      if	bankswitch == 64
-   2373  f796				  -	      ORG	$10F80-bscode_length
-   2374  f796				  -	      RORG	$1FF80-bscode_length
-   2375  f796				  -	      endif
-   2376  f796					      else
-   2377  ff9c					      ORG	$FF9C
-   2378  ff9c					      endif
-   2379  ff9c					      endif
-   2380  ff9c
-   2381  ff9c							; font equates
-   2382  ff9c		       00 01	   .21stcentury =	1
-   2383  ff9c		       00 02	   alarmclock =	2
-   2384  ff9c		       00 03	   handwritten =	3
-   2385  ff9c		       00 04	   interrupted =	4
-   2386  ff9c		       00 05	   retroputer =	5
-   2387  ff9c		       00 06	   whimsey    =	6
-   2388  ff9c		       00 07	   tiny       =	7
-   2389  ff9c		       00 08	   hex	      =	8
-   2390  ff9c
-   2391  ff9c				  -	      ifconst	font
-   2392  ff9c				  -	      if	font == hex
-   2393  ff9c				  -	      ORG	. - 48
-   2394  ff9c				  -	      endif
-   2395  ff9c					      endif
-   2396  ff9c
-   2397  ff9c				   scoretable
-   2398  ff9c
-   2399  ff9c				  -	      ifconst	font
-   2400  ff9c				  -	      if	font == .21stcentury
-   2401  ff9c				  -	      include	"score_graphics.asm.21stcentury"
-   2402  ff9c				  -	      endif
-   2403  ff9c				  -	      if	font == alarmclock
-   2404  ff9c				  -	      include	"score_graphics.asm.alarmclock"
-   2405  ff9c				  -	      endif
-   2406  ff9c				  -	      if	font == handwritten
-   2407  ff9c				  -	      include	"score_graphics.asm.handwritten"
-   2408  ff9c				  -	      endif
-   2409  ff9c				  -	      if	font == interrupted
-   2410  ff9c				  -	      include	"score_graphics.asm.interrupted"
-   2411  ff9c				  -	      endif
-   2412  ff9c				  -	      if	font == retroputer
-   2413  ff9c				  -	      include	"score_graphics.asm.retroputer"
-   2414  ff9c				  -	      endif
-   2415  ff9c				  -	      if	font == whimsey
-   2416  ff9c				  -	      include	"score_graphics.asm.whimsey"
-   2417  ff9c				  -	      endif
-   2418  ff9c				  -	      if	font == tiny
-   2419  ff9c				  -	      include	"score_graphics.asm.tiny"
-   2420  ff9c				  -	      endif
-   2421  ff9c				  -	      if	font == hex
-   2422  ff9c				  -	      include	"score_graphics.asm.hex"
-   2423  ff9c				  -	      endif
-   2424  ff9c					      else		; default font
-   2425  ff9c
-   2426  ff9c		       3c		      .byte.b	%00111100
-   2427  ff9d		       66		      .byte.b	%01100110
-   2428  ff9e		       66		      .byte.b	%01100110
-   2429  ff9f		       66		      .byte.b	%01100110
-   2430  ffa0		       66		      .byte.b	%01100110
-   2431  ffa1		       66		      .byte.b	%01100110
-   2432  ffa2		       66		      .byte.b	%01100110
-   2433  ffa3		       3c		      .byte.b	%00111100
-   2434  ffa4
-   2435  ffa4		       7e		      .byte.b	%01111110
-   2436  ffa5		       18		      .byte.b	%00011000
-   2437  ffa6		       18		      .byte.b	%00011000
-   2438  ffa7		       18		      .byte.b	%00011000
-   2439  ffa8		       18		      .byte.b	%00011000
-   2440  ffa9		       38		      .byte.b	%00111000
-   2441  ffaa		       18		      .byte.b	%00011000
-   2442  ffab		       08		      .byte.b	%00001000
-   2443  ffac
-   2444  ffac		       7e		      .byte.b	%01111110
-   2445  ffad		       60		      .byte.b	%01100000
-   2446  ffae		       60		      .byte.b	%01100000
-   2447  ffaf		       3c		      .byte.b	%00111100
-   2448  ffb0		       06		      .byte.b	%00000110
-   2449  ffb1		       06		      .byte.b	%00000110
-   2450  ffb2		       46		      .byte.b	%01000110
-   2451  ffb3		       3c		      .byte.b	%00111100
-   2452  ffb4
-   2453  ffb4		       3c		      .byte.b	%00111100
-   2454  ffb5		       46		      .byte.b	%01000110
-   2455  ffb6		       06		      .byte.b	%00000110
-   2456  ffb7		       06		      .byte.b	%00000110
-   2457  ffb8		       1c		      .byte.b	%00011100
-   2458  ffb9		       06		      .byte.b	%00000110
-   2459  ffba		       46		      .byte.b	%01000110
-   2460  ffbb		       3c		      .byte.b	%00111100
-   2461  ffbc
-   2462  ffbc		       0c		      .byte.b	%00001100
-   2463  ffbd		       0c		      .byte.b	%00001100
-   2464  ffbe		       7e		      .byte.b	%01111110
-   2465  ffbf		       4c		      .byte.b	%01001100
-   2466  ffc0		       4c		      .byte.b	%01001100
-   2467  ffc1		       2c		      .byte.b	%00101100
-   2468  ffc2		       1c		      .byte.b	%00011100
-   2469  ffc3		       0c		      .byte.b	%00001100
-   2470  ffc4
-   2471  ffc4		       3c		      .byte.b	%00111100
-   2472  ffc5		       46		      .byte.b	%01000110
-   2473  ffc6		       06		      .byte.b	%00000110
-   2474  ffc7		       06		      .byte.b	%00000110
-   2475  ffc8		       3c		      .byte.b	%00111100
-   2476  ffc9		       60		      .byte.b	%01100000
-   2477  ffca		       60		      .byte.b	%01100000
-   2478  ffcb		       7e		      .byte.b	%01111110
-   2479  ffcc
-   2480  ffcc		       3c		      .byte.b	%00111100
-   2481  ffcd		       66		      .byte.b	%01100110
-   2482  ffce		       66		      .byte.b	%01100110
-   2483  ffcf		       66		      .byte.b	%01100110
-   2484  ffd0		       7c		      .byte.b	%01111100
-   2485  ffd1		       60		      .byte.b	%01100000
-   2486  ffd2		       62		      .byte.b	%01100010
-   2487  ffd3		       3c		      .byte.b	%00111100
-   2488  ffd4
-   2489  ffd4		       30		      .byte.b	%00110000
-   2490  ffd5		       30		      .byte.b	%00110000
-   2491  ffd6		       30		      .byte.b	%00110000
-   2492  ffd7		       18		      .byte.b	%00011000
-   2493  ffd8		       0c		      .byte.b	%00001100
-   2494  ffd9		       06		      .byte.b	%00000110
-   2495  ffda		       42		      .byte.b	%01000010
-   2496  ffdb		       3e		      .byte.b	%00111110
-   2497  ffdc
-   2498  ffdc		       3c		      .byte.b	%00111100
-   2499  ffdd		       66		      .byte.b	%01100110
-   2500  ffde		       66		      .byte.b	%01100110
-   2501  ffdf		       66		      .byte.b	%01100110
-   2502  ffe0		       3c		      .byte.b	%00111100
-   2503  ffe1		       66		      .byte.b	%01100110
-   2504  ffe2		       66		      .byte.b	%01100110
-   2505  ffe3		       3c		      .byte.b	%00111100
-   2506  ffe4
-   2507  ffe4		       3c		      .byte.b	%00111100
-   2508  ffe5		       46		      .byte.b	%01000110
-   2509  ffe6		       06		      .byte.b	%00000110
-   2510  ffe7		       3e		      .byte.b	%00111110
-   2511  ffe8		       66		      .byte.b	%01100110
-   2512  ffe9		       66		      .byte.b	%01100110
-   2513  ffea		       66		      .byte.b	%01100110
-   2514  ffeb		       3c		      .byte.b	%00111100
-   2515  ffec
-   2516  ffec					      ifnconst	DPC_kernel_options
-   2517  ffec
-   2518  ffec		       00		      .byte.b	%00000000
-   2519  ffed		       00		      .byte.b	%00000000
-   2520  ffee		       00		      .byte.b	%00000000
-   2521  ffef		       00		      .byte.b	%00000000
-   2522  fff0		       00		      .byte.b	%00000000
-   2523  fff1		       00		      .byte.b	%00000000
-   2524  fff2		       00		      .byte.b	%00000000
-   2525  fff3		       00		      .byte.b	%00000000
-   2526  fff4
-   2527  fff4					      endif
-   2528  fff4
-   2529  fff4					      endif
-   2530  fff4
-   2531  fff4				  -	      ifconst	ROM2k
-   2532  fff4				  -	      ORG	$F7FC
-   2533  fff4					      else
-   2534  fff4				  -	      ifconst	bankswitch
-   2535  fff4				  -	      if	bankswitch == 8
-   2536  fff4				  -	      ORG	$2FF4-bscode_length
-   2537  fff4				  -	      RORG	$FFF4-bscode_length
-   2538  fff4				  -	      endif
-   2539  fff4				  -	      if	bankswitch == 16
-   2540  fff4				  -	      ORG	$4FF4-bscode_length
-   2541  fff4				  -	      RORG	$FFF4-bscode_length
-   2542  fff4				  -	      endif
-   2543  fff4				  -	      if	bankswitch == 32
-   2544  fff4				  -	      ORG	$8FF4-bscode_length
-   2545  fff4				  -	      RORG	$FFF4-bscode_length
-   2546  fff4				  -	      endif
-   2547  fff4				  -	      if	bankswitch == 64
-   2548  fff4				  -	      ORG	$10FE0-bscode_length
-   2549  fff4				  -	      RORG	$1FFE0-bscode_length
-   2550  fff4				  -	      endif
-   2551  fff4					      else
-   2552  fffc					      ORG	$FFFC
-   2553  fffc					      endif
-   2554  fffc					      endif
-   2555  fffc							; Provided under the CC0 license. See the included LICENSE.txt for details.
-   2556  fffc
-   2557  fffc				  -	      ifconst	bankswitch
-   2558  fffc				  -	      if	bankswitch == 8
-   2559  fffc				  -	      ORG	$2FFC
-   2560  fffc				  -	      RORG	$FFFC
-   2561  fffc				  -	      endif
-   2562  fffc				  -	      if	bankswitch == 16
-   2563  fffc				  -	      ORG	$4FFC
-   2564  fffc				  -	      RORG	$FFFC
-   2565  fffc				  -	      endif
-   2566  fffc				  -	      if	bankswitch == 32
-   2567  fffc				  -	      ORG	$8FFC
-   2568  fffc				  -	      RORG	$FFFC
-   2569  fffc				  -	      endif
-   2570  fffc				  -	      if	bankswitch == 64
-   2571  fffc				  -	      ORG	$10FF0
-   2572  fffc				  -	      RORG	$1FFF0
-   2573  fffc				  -	      lda	$ffe0	; we use wasted space to assist stella with EF format auto-detection
-   2574  fffc				  -	      ORG	$10FF8
-   2575  fffc				  -	      RORG	$1FFF8
-   2576  fffc				  -	      ifconst	superchip
-   2577  fffc				  -	      .byte	"E","F","S","C"
-   2578  fffc				  -	      else
-   2579  fffc				  -	      .byte	"E","F","E","F"
-   2580  fffc				  -	      endif
-   2581  fffc				  -	      ORG	$10FFC
-   2582  fffc				  -	      RORG	$1FFFC
-   2583  fffc				  -	      endif
-   2584  fffc					      else
-   2585  fffc				  -	      ifconst	ROM2k
-   2586  fffc				  -	      ORG	$F7FC
-   2587  fffc					      else
-   2588  fffc					      ORG	$FFFC
-   2589  fffc					      endif
-   2590  fffc					      endif
-   2591  fffc		       00 f0		      .word.w	(start & $ffff)
-   2592  fffe		       00 f0		      .word.w	(start & $ffff)
+   1645  f45d				   .L00 		;  rem /** Declare the variable for sound. **/
+   1646  f45d
+   1647  f45d				   .L01 		;  dim sounda	=  a  :  sounda  =  32
+   1648  f45d
+   1649  f45d		       a9 20		      LDA	#32
+   1650  f45f		       85 d4		      STA	sounda
+   1651  f461				   .
+   1652  f461							; 
+   1653  f461
+   1654  f461				   .
+   1655  f461							; 
+   1656  f461
+   1657  f461				   .main
+   1658  f461							; main
+   1659  f461
+   1660  f461				   .
+   1661  f461							; 
+   1662  f461
+   1663  f461				   .L02 		;  AUDV0  =  0
+   1664  f461
+   1665  f461		       a9 00		      LDA	#0
+   1666  f463		       85 19		      STA	AUDV0
+   1667  f465				   .
+   1668  f465							; 
+   1669  f465
+   1670  f465				   .L03 		;  if joy0right then AUDC0  =	4  :  AUDV0  =	4  :  AUDF0  =	 ( sounda - 34 ) 
+   1671  f465
+   1672  f465		       2c 80 02 	      bit	SWCHA
+   1673  f468		       30 0d		      BMI	.skipL03
+   1674  f46a				   .condpart0
+   1675  f46a		       a9 04		      LDA	#4
+   1676  f46c		       85 15		      STA	AUDC0
+   1677  f46e		       85 19		      STA	AUDV0
+   1678  f470							; complex statement detected
+   1679  f470		       a5 d4		      LDA	sounda
+   1680  f472		       38		      SEC
+   1681  f473		       e9 22		      SBC	#34
+   1682  f475		       85 17		      STA	AUDF0
+   1683  f477				   .skipL03
+   1684  f477				   .
+   1685  f477							; 
+   1686  f477
+   1687  f477				   .
+   1688  f477							; 
+   1689  f477
+   1690  f477				   .
+   1691  f477							; 
+   1692  f477
+   1693  f477				   .L04 		;  drawscreen
+   1694  f477
+   1695  f477		       20 bd f3 	      jsr	drawscreen
+   1696  f47a				   .
+   1697  f47a							; 
+   1698  f47a
+   1699  f47a				   .L05 		;  goto main
+   1700  f47a
+   1701  f47a		       4c 61 f4 	      jmp	.main
+   1702  f47d
+   1703  f47d				   .
+   1704  f47d							; 
+   1705  f47d
+   1706  f47d				   .
+   1707  f47d							; 
+   1708  f47d
+   1709  f47d				   .
+   1710  f47d							; 
+   1711  f47d
+   1712  f47d				   .
+   1713  f47d							; 
+   1714  f47d
+   1715  f47d					      if	ECHOFIRST
+      2847 bytes of ROM space left
+   1716  f47d					      echo	"    ",[(scoretable - *)]d , "bytes of ROM space left")
+   1717  f47d					      endif
+   1718  f47d		       00 01	   ECHOFIRST  =	1
+   1719  f47d
+   1720  f47d
+   1721  f47d
+   1722  f47d							; Provided under the CC0 license. See the included LICENSE.txt for details.
+   1723  f47d
+   1724  f47d							; feel free to modify the score graphics - just keep each digit 8 high
+   1725  f47d							; and keep the conditional compilation stuff intact
+   1726  f47d				  -	      ifconst	ROM2k
+   1727  f47d				  -	      ORG	$F7AC-8
+   1728  f47d					      else
+   1729  f47d				  -	      ifconst	bankswitch
+   1730  f47d				  -	      if	bankswitch == 8
+   1731  f47d				  -	      ORG	$2F94-bscode_length
+   1732  f47d				  -	      RORG	$FF94-bscode_length
+   1733  f47d				  -	      endif
+   1734  f47d				  -	      if	bankswitch == 16
+   1735  f47d				  -	      ORG	$4F94-bscode_length
+   1736  f47d				  -	      RORG	$FF94-bscode_length
+   1737  f47d				  -	      endif
+   1738  f47d				  -	      if	bankswitch == 32
+   1739  f47d				  -	      ORG	$8F94-bscode_length
+   1740  f47d				  -	      RORG	$FF94-bscode_length
+   1741  f47d				  -	      endif
+   1742  f47d				  -	      if	bankswitch == 64
+   1743  f47d				  -	      ORG	$10F80-bscode_length
+   1744  f47d				  -	      RORG	$1FF80-bscode_length
+   1745  f47d				  -	      endif
+   1746  f47d					      else
+   1747  ff9c					      ORG	$FF9C
+   1748  ff9c					      endif
+   1749  ff9c					      endif
+   1750  ff9c
+   1751  ff9c							; font equates
+   1752  ff9c		       00 01	   .21stcentury =	1
+   1753  ff9c		       00 02	   alarmclock =	2
+   1754  ff9c		       00 03	   handwritten =	3
+   1755  ff9c		       00 04	   interrupted =	4
+   1756  ff9c		       00 05	   retroputer =	5
+   1757  ff9c		       00 06	   whimsey    =	6
+   1758  ff9c		       00 07	   tiny       =	7
+   1759  ff9c		       00 08	   hex	      =	8
+   1760  ff9c
+   1761  ff9c				  -	      ifconst	font
+   1762  ff9c				  -	      if	font == hex
+   1763  ff9c				  -	      ORG	. - 48
+   1764  ff9c				  -	      endif
+   1765  ff9c					      endif
+   1766  ff9c
+   1767  ff9c				   scoretable
+   1768  ff9c
+   1769  ff9c				  -	      ifconst	font
+   1770  ff9c				  -	      if	font == .21stcentury
+   1771  ff9c				  -	      include	"score_graphics.asm.21stcentury"
+   1772  ff9c				  -	      endif
+   1773  ff9c				  -	      if	font == alarmclock
+   1774  ff9c				  -	      include	"score_graphics.asm.alarmclock"
+   1775  ff9c				  -	      endif
+   1776  ff9c				  -	      if	font == handwritten
+   1777  ff9c				  -	      include	"score_graphics.asm.handwritten"
+   1778  ff9c				  -	      endif
+   1779  ff9c				  -	      if	font == interrupted
+   1780  ff9c				  -	      include	"score_graphics.asm.interrupted"
+   1781  ff9c				  -	      endif
+   1782  ff9c				  -	      if	font == retroputer
+   1783  ff9c				  -	      include	"score_graphics.asm.retroputer"
+   1784  ff9c				  -	      endif
+   1785  ff9c				  -	      if	font == whimsey
+   1786  ff9c				  -	      include	"score_graphics.asm.whimsey"
+   1787  ff9c				  -	      endif
+   1788  ff9c				  -	      if	font == tiny
+   1789  ff9c				  -	      include	"score_graphics.asm.tiny"
+   1790  ff9c				  -	      endif
+   1791  ff9c				  -	      if	font == hex
+   1792  ff9c				  -	      include	"score_graphics.asm.hex"
+   1793  ff9c				  -	      endif
+   1794  ff9c					      else		; default font
+   1795  ff9c
+   1796  ff9c		       3c		      .byte.b	%00111100
+   1797  ff9d		       66		      .byte.b	%01100110
+   1798  ff9e		       66		      .byte.b	%01100110
+   1799  ff9f		       66		      .byte.b	%01100110
+   1800  ffa0		       66		      .byte.b	%01100110
+   1801  ffa1		       66		      .byte.b	%01100110
+   1802  ffa2		       66		      .byte.b	%01100110
+   1803  ffa3		       3c		      .byte.b	%00111100
+   1804  ffa4
+   1805  ffa4		       7e		      .byte.b	%01111110
+   1806  ffa5		       18		      .byte.b	%00011000
+   1807  ffa6		       18		      .byte.b	%00011000
+   1808  ffa7		       18		      .byte.b	%00011000
+   1809  ffa8		       18		      .byte.b	%00011000
+   1810  ffa9		       38		      .byte.b	%00111000
+   1811  ffaa		       18		      .byte.b	%00011000
+   1812  ffab		       08		      .byte.b	%00001000
+   1813  ffac
+   1814  ffac		       7e		      .byte.b	%01111110
+   1815  ffad		       60		      .byte.b	%01100000
+   1816  ffae		       60		      .byte.b	%01100000
+   1817  ffaf		       3c		      .byte.b	%00111100
+   1818  ffb0		       06		      .byte.b	%00000110
+   1819  ffb1		       06		      .byte.b	%00000110
+   1820  ffb2		       46		      .byte.b	%01000110
+   1821  ffb3		       3c		      .byte.b	%00111100
+   1822  ffb4
+   1823  ffb4		       3c		      .byte.b	%00111100
+   1824  ffb5		       46		      .byte.b	%01000110
+   1825  ffb6		       06		      .byte.b	%00000110
+   1826  ffb7		       06		      .byte.b	%00000110
+   1827  ffb8		       1c		      .byte.b	%00011100
+   1828  ffb9		       06		      .byte.b	%00000110
+   1829  ffba		       46		      .byte.b	%01000110
+   1830  ffbb		       3c		      .byte.b	%00111100
+   1831  ffbc
+   1832  ffbc		       0c		      .byte.b	%00001100
+   1833  ffbd		       0c		      .byte.b	%00001100
+   1834  ffbe		       7e		      .byte.b	%01111110
+   1835  ffbf		       4c		      .byte.b	%01001100
+   1836  ffc0		       4c		      .byte.b	%01001100
+   1837  ffc1		       2c		      .byte.b	%00101100
+   1838  ffc2		       1c		      .byte.b	%00011100
+   1839  ffc3		       0c		      .byte.b	%00001100
+   1840  ffc4
+   1841  ffc4		       3c		      .byte.b	%00111100
+   1842  ffc5		       46		      .byte.b	%01000110
+   1843  ffc6		       06		      .byte.b	%00000110
+   1844  ffc7		       06		      .byte.b	%00000110
+   1845  ffc8		       3c		      .byte.b	%00111100
+   1846  ffc9		       60		      .byte.b	%01100000
+   1847  ffca		       60		      .byte.b	%01100000
+   1848  ffcb		       7e		      .byte.b	%01111110
+   1849  ffcc
+   1850  ffcc		       3c		      .byte.b	%00111100
+   1851  ffcd		       66		      .byte.b	%01100110
+   1852  ffce		       66		      .byte.b	%01100110
+   1853  ffcf		       66		      .byte.b	%01100110
+   1854  ffd0		       7c		      .byte.b	%01111100
+   1855  ffd1		       60		      .byte.b	%01100000
+   1856  ffd2		       62		      .byte.b	%01100010
+   1857  ffd3		       3c		      .byte.b	%00111100
+   1858  ffd4
+   1859  ffd4		       30		      .byte.b	%00110000
+   1860  ffd5		       30		      .byte.b	%00110000
+   1861  ffd6		       30		      .byte.b	%00110000
+   1862  ffd7		       18		      .byte.b	%00011000
+   1863  ffd8		       0c		      .byte.b	%00001100
+   1864  ffd9		       06		      .byte.b	%00000110
+   1865  ffda		       42		      .byte.b	%01000010
+   1866  ffdb		       3e		      .byte.b	%00111110
+   1867  ffdc
+   1868  ffdc		       3c		      .byte.b	%00111100
+   1869  ffdd		       66		      .byte.b	%01100110
+   1870  ffde		       66		      .byte.b	%01100110
+   1871  ffdf		       66		      .byte.b	%01100110
+   1872  ffe0		       3c		      .byte.b	%00111100
+   1873  ffe1		       66		      .byte.b	%01100110
+   1874  ffe2		       66		      .byte.b	%01100110
+   1875  ffe3		       3c		      .byte.b	%00111100
+   1876  ffe4
+   1877  ffe4		       3c		      .byte.b	%00111100
+   1878  ffe5		       46		      .byte.b	%01000110
+   1879  ffe6		       06		      .byte.b	%00000110
+   1880  ffe7		       3e		      .byte.b	%00111110
+   1881  ffe8		       66		      .byte.b	%01100110
+   1882  ffe9		       66		      .byte.b	%01100110
+   1883  ffea		       66		      .byte.b	%01100110
+   1884  ffeb		       3c		      .byte.b	%00111100
+   1885  ffec
+   1886  ffec					      ifnconst	DPC_kernel_options
+   1887  ffec
+   1888  ffec		       00		      .byte.b	%00000000
+   1889  ffed		       00		      .byte.b	%00000000
+   1890  ffee		       00		      .byte.b	%00000000
+   1891  ffef		       00		      .byte.b	%00000000
+   1892  fff0		       00		      .byte.b	%00000000
+   1893  fff1		       00		      .byte.b	%00000000
+   1894  fff2		       00		      .byte.b	%00000000
+   1895  fff3		       00		      .byte.b	%00000000
+   1896  fff4
+   1897  fff4					      endif
+   1898  fff4
+   1899  fff4					      endif
+   1900  fff4
+   1901  fff4				  -	      ifconst	ROM2k
+   1902  fff4				  -	      ORG	$F7FC
+   1903  fff4					      else
+   1904  fff4				  -	      ifconst	bankswitch
+   1905  fff4				  -	      if	bankswitch == 8
+   1906  fff4				  -	      ORG	$2FF4-bscode_length
+   1907  fff4				  -	      RORG	$FFF4-bscode_length
+   1908  fff4				  -	      endif
+   1909  fff4				  -	      if	bankswitch == 16
+   1910  fff4				  -	      ORG	$4FF4-bscode_length
+   1911  fff4				  -	      RORG	$FFF4-bscode_length
+   1912  fff4				  -	      endif
+   1913  fff4				  -	      if	bankswitch == 32
+   1914  fff4				  -	      ORG	$8FF4-bscode_length
+   1915  fff4				  -	      RORG	$FFF4-bscode_length
+   1916  fff4				  -	      endif
+   1917  fff4				  -	      if	bankswitch == 64
+   1918  fff4				  -	      ORG	$10FE0-bscode_length
+   1919  fff4				  -	      RORG	$1FFE0-bscode_length
+   1920  fff4				  -	      endif
+   1921  fff4					      else
+   1922  fffc					      ORG	$FFFC
+   1923  fffc					      endif
+   1924  fffc					      endif
+   1925  fffc							; Provided under the CC0 license. See the included LICENSE.txt for details.
+   1926  fffc
+   1927  fffc				  -	      ifconst	bankswitch
+   1928  fffc				  -	      if	bankswitch == 8
+   1929  fffc				  -	      ORG	$2FFC
+   1930  fffc				  -	      RORG	$FFFC
+   1931  fffc				  -	      endif
+   1932  fffc				  -	      if	bankswitch == 16
+   1933  fffc				  -	      ORG	$4FFC
+   1934  fffc				  -	      RORG	$FFFC
+   1935  fffc				  -	      endif
+   1936  fffc				  -	      if	bankswitch == 32
+   1937  fffc				  -	      ORG	$8FFC
+   1938  fffc				  -	      RORG	$FFFC
+   1939  fffc				  -	      endif
+   1940  fffc				  -	      if	bankswitch == 64
+   1941  fffc				  -	      ORG	$10FF0
+   1942  fffc				  -	      RORG	$1FFF0
+   1943  fffc				  -	      lda	$ffe0	; we use wasted space to assist stella with EF format auto-detection
+   1944  fffc				  -	      ORG	$10FF8
+   1945  fffc				  -	      RORG	$1FFF8
+   1946  fffc				  -	      ifconst	superchip
+   1947  fffc				  -	      .byte	"E","F","S","C"
+   1948  fffc				  -	      else
+   1949  fffc				  -	      .byte	"E","F","E","F"
+   1950  fffc				  -	      endif
+   1951  fffc				  -	      ORG	$10FFC
+   1952  fffc				  -	      RORG	$1FFFC
+   1953  fffc				  -	      endif
+   1954  fffc					      else
+   1955  fffc				  -	      ifconst	ROM2k
+   1956  fffc				  -	      ORG	$F7FC
+   1957  fffc					      else
+   1958  fffc					      ORG	$FFFC
+   1959  fffc					      endif
+   1960  fffc					      endif
+   1961  fffc		       00 f0		      .word.w	(start & $ffff)
+   1962  fffe		       00 f0		      .word.w	(start & $ffff)

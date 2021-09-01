@@ -1,7 +1,4 @@
-; Started 8/25/21 Invader Atari 2600 Batari Basic using Visual bB IDE 
-
-
-; to do: sound
+; Started 8/25/21 Invader Atari 2600 Batari Basic using Visual bB IDE  
 
  
  ; Kernel setup (for using more than 2 players - allows sprites 0 through 5) (swaps Y direction for screen)
@@ -55,19 +52,14 @@ main
  
  ; three sounds, increase value, kill sound if frequency 31 has been played
  ; boom sound
- if sound <= 31                then sound = sound + 1 : AUDC0 = 8 : AUDV0 = 4 : AUDF0 = sound -1
+ if sound <= 31                then sound = sound + 1 : AUDC0 = 8 : AUDV0 = 4 : AUDF0 = sound -2
  ; pew sound
- if sound >= 33 && sound <= 64 then sound = sound + 1 : AUDC0 = 7 : AUDV0 = 4 : AUDF0 = sound -34
+ if sound >= 33 && sound <= 64 then sound = sound + 1 : AUDC0 = 4 : AUDV0 = 3 : AUDF0 = sound -34
  ; explosion sound
- if sound >= 66 && sound <= 97 then sound = sound + 1 : AUDC0 = 2 : AUDV0 = 4 : AUDF0 = sound -67
-
- ; kill loop or any other sound
- ;if joy1fire then sound = 32
- ;if inv_blast_delay > 5 then then sound = 32
-
+ if sound >= 66 && sound <= 97 then sound = sound + 1 : AUDC0 = 2 : AUDV0 = 6 : AUDF0 = sound -67 
  
  ; if nothing pressed then...
- if !joy0fire && !joy0up && !joy0down && !joy0left && !joy0right then u{3} = 1
+ if !joy0fire then u{3} = 1
 
  
  if tur_hit = 0 then gosub draw__move_turret 
@@ -176,11 +168,11 @@ end
 
  return
 
- ; && u{3}        b{3} = 0 : sound = 0 
+
 
 ; check collision between turret shot and invader
 col_shot_inv 
- if shot_x + 3 >= inv_x && shot_x + 3 <= inv_x + 6 && shot_y > inv_y && u{3} then inv_hit = 1 : b{3} = 0 : sound = 0 
+ if shot_x + 3 >= inv_x && shot_x + 3 <= inv_x + 6 && shot_y > inv_y then inv_hit = 1 : sound = 0 
 
  if inv_hit = 1 then inv_blast_delay = inv_blast_delay + 1 
 
@@ -249,7 +241,7 @@ end
 
 
 
-; draw and move turret shot 
+ ; draw and move turret shot (turet fire)
 draw__move_turret_shot
  player3:
  %00000000
@@ -264,20 +256,20 @@ end
 
  COLUP3 = 14 
 
- if joy0fire && u{3} && joy0fire then tur_fired = 1 : shot_x = tur_x : shot_y = tur_y + 1 : player3x = shot_x : player3y = shot_y : u{3} = 0 : sound = 33
+ if joy0fire && tur_fired = 0 then tur_fired = 1 : shot_x = tur_x : shot_y = tur_y + 1 : player3x = shot_x : player3y = shot_y : sound = 33
 
  if tur_fired = 1 then shot_y = shot_y + 2 : player3x = shot_x : player3y = shot_y
 
- if shot_y > 77 && ! joy0fire then tur_fired = 0 : shot_y = 0 : player3y = shot_y
+ if shot_y > 77 && ! joy0fire then tur_fired = 0 : shot_y = 0 : player3y = shot_y 
 
  return
-
+ 
  
 
 ; check collision between invader shot and turret
 col_inv_shot_turret
 
- if inv_shot_x + 4 >= tur_x  && inv_shot_x + 2 <= tur_x + 6 && inv_shot_y - 5 < tur_y -5 then tur_hit = 1 
+ if inv_shot_x + 4 >= tur_x  && inv_shot_x + 2 <= tur_x + 6 && inv_shot_y - 5 < tur_y -5 then tur_hit = 1 : sound = 66 
 
  return
 
@@ -354,7 +346,7 @@ end
  %00000000
 end
 
- if tur_anim_frame = 60 then tur_anim_frame = 0 : tur_hit = 0 : pfscore2 = pfscore2 / 4 : tur_x = 84 : tur_y = 14
+ if tur_anim_frame = 60 then tur_anim_frame = 0 : tur_hit = 0 : pfscore2 = pfscore2 / 4 : tur_x = 84 : tur_y = 14 
 
  return
 

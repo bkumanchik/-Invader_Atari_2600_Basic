@@ -1645,280 +1645,207 @@ game
 .
  ; 
 
-.L00 ;  dim _sc1  =  score
-
-.L01 ;  dim _sc2  =  score + 1
-
-.L02 ;  dim _sc3  =  score + 2
-
-.
- ; 
-
-.L03 ;  rem /** Declare the variable for sound. **/
-
-.L04 ;  dim sounda  =  a
-
-.L05 ;  sounda  =  32
+.L00 ;  dim sound  =  t  :  sound  =  32
 
 	LDA #32
-	STA sounda
-.L06 ;  rem  The C variable is just used for displaying what frequency is being played and the goto's are just for saving cycles, don't know what () does but I've seen it used like that 
-
+	STA sound
 .
  ; 
 
 .main
  ; main
 
-.L07 ;  scorecolor  =  scorecolor  +  1
+.
+ ; 
 
-	INC scorecolor
-.L08 ;  AUDV0  =  0
+.
+ ; 
+
+.L01 ;  AUDV0  =  0
 
 	LDA #0
 	STA AUDV0
-.L09 ;  if sounda  >= 132 then goto _skip_0_131
+.
+ ; 
 
-	LDA sounda
-	CMP #132
-     BCC .skipL09
-.condpart0
- jmp ._skip_0_131
+.
+ ; 
 
-.skipL09
-.L010 ;  rem /** increase value.  Kill sound if frequency 31 has been played  **/
+.
+ ; 
 
-.L011 ;  if sounda  <=  31 then sounda  =  sounda  +  1  :  AUDC0  =  8  :  AUDV0  =  4  :  AUDF0  =  sounda - 1  : c = sounda - 1
+.L02 ;  if sound  <=  31 then sound  =  sound  +  1  :  AUDC0  =  8  :  AUDV0  =  4  :  AUDF0  =  sound  - 1
 
 	LDA #31
-	CMP sounda
-     BCC .skipL011
-.condpart1
-	INC sounda
+	CMP sound
+     BCC .skipL02
+.condpart0
+	INC sound
 	LDA #8
 	STA AUDC0
 	LDA #4
 	STA AUDV0
-	LDA sounda
+	LDA sound
 	SEC
 	SBC #1
 	STA AUDF0
-	LDA sounda
-	SEC
-	SBC #1
-	STA c
-.skipL011
-.L012 ;  if sounda  >= 33  &&  sounda  <=  64 then sounda  =  sounda  +  1  :  AUDC0  =  4  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 34 )   : c = sounda - 34
+.skipL02
+.
+ ; 
 
-	LDA sounda
+.L03 ;  if sound  >=  33  &&  sound  <=  64 then sound  =  sound  +  1  :  AUDC0  =  4  :  AUDV0  =  4  :  AUDF0  =  sound  - 34
+
+	LDA sound
 	CMP #33
-     BCC .skipL012
-.condpart2
+     BCC .skipL03
+.condpart1
 	LDA #64
-	CMP sounda
-     BCC .skip2then
-.condpart3
-	INC sounda
+	CMP sound
+     BCC .skip1then
+.condpart2
+	INC sound
 	LDA #4
 	STA AUDC0
 	STA AUDV0
-; complex statement detected
-	LDA sounda
+	LDA sound
 	SEC
 	SBC #34
 	STA AUDF0
-	LDA sounda
-	SEC
-	SBC #34
-	STA c
-.skip2then
-.skipL012
-.L013 ;  if sounda  >= 66  &&  sounda  <=  97 then sounda  =  sounda  +  1  :  AUDC0  =  2  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 67 )   : c = sounda - 67
+.skip1then
+.skipL03
+.
+ ; 
 
-	LDA sounda
+.L04 ;  if sound  >=  66  &&  sound  <=  97 then sound  =  sound  +  1  :  AUDC0  =  2  :  AUDV0  =  4  :  AUDF0  =  sound  - 67
+
+	LDA sound
 	CMP #66
-     BCC .skipL013
-.condpart4
+     BCC .skipL04
+.condpart3
 	LDA #97
-	CMP sounda
-     BCC .skip4then
-.condpart5
-	INC sounda
+	CMP sound
+     BCC .skip3then
+.condpart4
+	INC sound
 	LDA #2
 	STA AUDC0
 	LDA #4
 	STA AUDV0
-; complex statement detected
-	LDA sounda
+	LDA sound
 	SEC
 	SBC #67
 	STA AUDF0
-	LDA sounda
-	SEC
-	SBC #67
-	STA c
-.skip4then
-.skipL013
-.L014 ;  if sounda  >= 99  &&  sounda  <=  130 then sounda  =  sounda  +  1  :  AUDC0  =  1  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 100 )   : c = sounda - 100
-
-	LDA sounda
-	CMP #99
-     BCC .skipL014
-.condpart6
-	LDA #130
-	CMP sounda
-     BCC .skip6then
-.condpart7
-	INC sounda
-	LDA #1
-	STA AUDC0
-	LDA #4
-	STA AUDV0
-; complex statement detected
-	LDA sounda
-	SEC
-	SBC #100
-	STA AUDF0
-	LDA sounda
-	SEC
-	SBC #100
-	STA c
-.skip6then
-.skipL014
-.L015 ;  goto _skip_132_255
-
- jmp ._skip_132_255
-
-._skip_0_131
- ; _skip_0_131
-
-.L016 ;  if sounda  >= 132  &&  sounda  <=  163 then sounda  =  sounda  +  1  :  AUDC0  =  7  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 133 )   : c = sounda - 133
-
-	LDA sounda
-	CMP #132
-     BCC .skipL016
-.condpart8
-	LDA #163
-	CMP sounda
-     BCC .skip8then
-.condpart9
-	INC sounda
-	LDA #7
-	STA AUDC0
-	LDA #4
-	STA AUDV0
-; complex statement detected
-	LDA sounda
-	SEC
-	SBC #133
-	STA AUDF0
-	LDA sounda
-	SEC
-	SBC #133
-	STA c
-.skip8then
-.skipL016
-.L017 ;  rem /** decrease value.  Kill sound if frequency 0 has been played  **/
-
-.L018 ;  if sounda  >= 165  &&  sounda  <=  196 then sounda  =  sounda  -  1  :  AUDC0  =  7  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 164 )   : c = sounda - 164
-
-	LDA sounda
-	CMP #165
-     BCC .skipL018
-.condpart10
-	LDA #196
-	CMP sounda
-     BCC .skip10then
-.condpart11
-	DEC sounda
-	LDA #7
-	STA AUDC0
-	LDA #4
-	STA AUDV0
-; complex statement detected
-	LDA sounda
-	SEC
-	SBC #164
-	STA AUDF0
-	LDA sounda
-	SEC
-	SBC #164
-	STA c
-.skip10then
-.skipL018
-.L019 ;  if sounda  >= 198  &&  sounda  <=  229 then sounda  =  sounda  -  1  :  AUDC0  =  8  :  AUDV0  =  4  :  AUDF0  =   ( sounda - 197 )   : c = sounda - 197
-
-	LDA sounda
-	CMP #198
-     BCC .skipL019
-.condpart12
-	LDA #229
-	CMP sounda
-     BCC .skip12then
-.condpart13
-	DEC sounda
-	LDA #8
-	STA AUDC0
-	LDA #4
-	STA AUDV0
-; complex statement detected
-	LDA sounda
-	SEC
-	SBC #197
-	STA AUDF0
-	LDA sounda
-	SEC
-	SBC #197
-	STA c
-.skip12then
-.skipL019
-.L020 ;  rem  Short loop
-
-.L021 ;  if sounda  >= 231 then sounda  =  sounda  -  1  :  AUDC0  =  10  :  AUDV0  =  4  :  AUDF0  =  sounda - 230  : c = sounda - 230
-
-	LDA sounda
-	CMP #231
-     BCC .skipL021
-.condpart14
-	DEC sounda
-	LDA #10
-	STA AUDC0
-	LDA #4
-	STA AUDV0
-	LDA sounda
-	SEC
-	SBC #230
-	STA AUDF0
-	LDA sounda
-	SEC
-	SBC #230
-	STA c
-.skipL021
-.L022 ;  if sounda  = 230 then sounda = 255
-
-	LDA sounda
-	CMP #230
-     BNE .skipL022
-.condpart15
-	LDA #255
-	STA sounda
-.skipL022
-._skip_132_255
- ; _skip_132_255
-
+.skip3then
+.skipL04
 .
  ; 
 
 .
  ; 
 
-.L023 ;  if !joy0fire  &&  !joy0right  &&  !joy0up  &&  !joy0down  &&  !joy0left  &&  !joy1left  &&  !joy1up  &&  !joy1down then b{3} = 1
+.L05 ;  if !joy0fire  &&  !joy0up  &&  !joy0down  &&  !joy0left  &&  !joy0right then b{3} = 1
 
  bit INPT4
-	BPL .skipL023
-.condpart16
+	BPL .skipL05
+.condpart5
+ lda #$10
  bit SWCHA
-	BPL .skip16then
+	BEQ .skip5then
+.condpart6
+ lda #$20
+ bit SWCHA
+	BEQ .skip6then
+.condpart7
+ bit SWCHA
+	BVC .skip7then
+.condpart8
+ bit SWCHA
+	BPL .skip8then
+.condpart9
+	LDA b
+	ORA #8
+	STA b
+.skip8then
+.skip7then
+.skip6then
+.skip5then
+.skipL05
+.
+ ; 
+
+.L06 ;  if b{3}  &&  joy0fire then b{3} = 0  :  sound  =  0
+
+	LDA b
+	AND #8
+	BEQ .skipL06
+.condpart10
+ bit INPT4
+	BMI .skip10then
+.condpart11
+	LDA b
+	AND #247
+	STA b
+	LDA #0
+	STA sound
+.skip10then
+.skipL06
+.L07 ;  if b{3}  &&  joy0right then b{3} = 0  :  sound  =  33
+
+	LDA b
+	AND #8
+	BEQ .skipL07
+.condpart12
+ bit SWCHA
+	BMI .skip12then
+.condpart13
+	LDA b
+	AND #247
+	STA b
+	LDA #33
+	STA sound
+.skip12then
+.skipL07
+.L08 ;  if b{3}  &&  joy0up then b{3} = 0  :  sound  =  66
+
+	LDA b
+	AND #8
+	BEQ .skipL08
+.condpart14
+ lda #$10
+ bit SWCHA
+	BNE .skip14then
+.condpart15
+	LDA b
+	AND #247
+	STA b
+	LDA #66
+	STA sound
+.skip14then
+.skipL08
+.
+ ; 
+
+.
+ ; 
+
+.L09 ;  if joy1fire then sound  =  32
+
+ bit INPT5
+	BMI .skipL09
+.condpart16
+	LDA #32
+	STA sound
+.skipL09
+.
+ ; 
+
+.
+ ; 
+
+.L010 ;  if !joy0fire  &&  !joy0up  &&  !joy0down  &&  !joy0left  &&  !joy0right then b{3} = 1
+
+ bit INPT4
+	BPL .skipL010
 .condpart17
  lda #$10
  bit SWCHA
@@ -1931,416 +1858,63 @@ game
  bit SWCHA
 	BVC .skip19then
 .condpart20
- lda #4
  bit SWCHA
-	BEQ .skip20then
+	BPL .skip20then
 .condpart21
- lda #1
- bit SWCHA
-	BEQ .skip21then
-.condpart22
- lda #2
- bit SWCHA
-	BEQ .skip22then
-.condpart23
 	LDA b
 	ORA #8
 	STA b
-.skip22then
-.skip21then
 .skip20then
 .skip19then
 .skip18then
 .skip17then
-.skip16then
-.skipL023
+.skipL010
 .
  ; 
-
-.L024 ;  rem /** start playback of sound effects by putting a value in the sound variables **/
-
-.L025 ;  if b{3}  &&  joy0fire then b{3} = 0 : sounda  =  0
-
-	LDA b
-	AND #8
-	BEQ .skipL025
-.condpart24
- bit INPT4
-	BMI .skip24then
-.condpart25
-	LDA b
-	AND #247
-	STA b
-	LDA #0
-	STA sounda
-.skip24then
-.skipL025
-.L026 ;  if b{3}  &&  joy0right then b{3} = 0 : sounda  =  33
-
-	LDA b
-	AND #8
-	BEQ .skipL026
-.condpart26
- bit SWCHA
-	BMI .skip26then
-.condpart27
-	LDA b
-	AND #247
-	STA b
-	LDA #33
-	STA sounda
-.skip26then
-.skipL026
-.L027 ;  if b{3}  &&  joy0up then b{3} = 0 : sounda  =  66
-
-	LDA b
-	AND #8
-	BEQ .skipL027
-.condpart28
- lda #$10
- bit SWCHA
-	BNE .skip28then
-.condpart29
-	LDA b
-	AND #247
-	STA b
-	LDA #66
-	STA sounda
-.skip28then
-.skipL027
-.L028 ;  if b{3}  &&  joy0down then b{3} = 0 : sounda  =  99
-
-	LDA b
-	AND #8
-	BEQ .skipL028
-.condpart30
- lda #$20
- bit SWCHA
-	BNE .skip30then
-.condpart31
-	LDA b
-	AND #247
-	STA b
-	LDA #99
-	STA sounda
-.skip30then
-.skipL028
-.L029 ;  if b{3}  &&  joy0left then b{3} = 0 : sounda  =  132
-
-	LDA b
-	AND #8
-	BEQ .skipL029
-.condpart32
- bit SWCHA
-	BVS .skip32then
-.condpart33
-	LDA b
-	AND #247
-	STA b
-	LDA #132
-	STA sounda
-.skip32then
-.skipL029
-.
- ; 
-
-.L030 ;  if b{3}  &&  joy1left then b{3} = 0 : sounda  =  196
-
-	LDA b
-	AND #8
-	BEQ .skipL030
-.condpart34
- lda #4
- bit SWCHA
-	BNE .skip34then
-.condpart35
-	LDA b
-	AND #247
-	STA b
-	LDA #196
-	STA sounda
-.skip34then
-.skipL030
-.L031 ;  if b{3}  &&  joy1up then b{3} = 0 : sounda  =  229
-
-	LDA b
-	AND #8
-	BEQ .skipL031
-.condpart36
- lda #1
- bit SWCHA
-	BNE .skip36then
-.condpart37
-	LDA b
-	AND #247
-	STA b
-	LDA #229
-	STA sounda
-.skip36then
-.skipL031
-.L032 ;  if b{3}  &&  joy1down then b{3} = 0 : sounda  =  255
-
-	LDA b
-	AND #8
-	BEQ .skipL032
-.condpart38
- lda #2
- bit SWCHA
-	BNE .skip38then
-.condpart39
-	LDA b
-	AND #247
-	STA b
-	LDA #255
-	STA sounda
-.skip38then
-.skipL032
-.L033 ;  rem  Kill loop or any other sound
-
-.L034 ;  if joy1fire then sounda = 32 : c = 0
-
- bit INPT5
-	BMI .skipL034
-.condpart40
-	LDA #32
-	STA sounda
-	LDA #0
-	STA c
-.skipL034
-.L035 ;  rem  32 65  98 131 164 and 197 works the same so you can just leave the counter there after the sound has played 
 
 .
  ; 
 
-.L036 ;  temp4  =  sounda
-
-	LDA sounda
-	STA temp4
 .
  ; 
 
-.L037 ;  _sc1  =  0  :  _sc2  =  _sc2  &  15
-
-	LDA #0
-	STA _sc1
-	LDA _sc2
-	AND #15
-	STA _sc2
-.L038 ;  if temp4  >=  100 then _sc1  =  _sc1  +  16  :  temp4  =  temp4  -  100
-
-	LDA temp4
-	CMP #100
-     BCC .skipL038
-.condpart41
-	LDA _sc1
-	CLC
-	ADC #16
-	STA _sc1
-	LDA temp4
-	SEC
-	SBC #100
-	STA temp4
-.skipL038
-.L039 ;  if temp4  >=  100 then _sc1  =  _sc1  +  16  :  temp4  =  temp4  -  100
-
-	LDA temp4
-	CMP #100
-     BCC .skipL039
-.condpart42
-	LDA _sc1
-	CLC
-	ADC #16
-	STA _sc1
-	LDA temp4
-	SEC
-	SBC #100
-	STA temp4
-.skipL039
-.L040 ;  if temp4  >=  50 then _sc1  =  _sc1  +  5  :  temp4  =  temp4  -  50
-
-	LDA temp4
-	CMP #50
-     BCC .skipL040
-.condpart43
-	LDA _sc1
-	CLC
-	ADC #5
-	STA _sc1
-	LDA temp4
-	SEC
-	SBC #50
-	STA temp4
-.skipL040
-.L041 ;  if temp4  >=  30 then _sc1  =  _sc1  +  3  :  temp4  =  temp4  -  30
-
-	LDA temp4
-	CMP #30
-     BCC .skipL041
-.condpart44
-	LDA _sc1
-	CLC
-	ADC #3
-	STA _sc1
-	LDA temp4
-	SEC
-	SBC #30
-	STA temp4
-.skipL041
-.L042 ;  if temp4  >=  20 then _sc1  =  _sc1  +  2  :  temp4  =  temp4  -  20
-
-	LDA temp4
-	CMP #20
-     BCC .skipL042
-.condpart45
-	LDA _sc1
-	CLC
-	ADC #2
-	STA _sc1
-	LDA temp4
-	SEC
-	SBC #20
-	STA temp4
-.skipL042
-.L043 ;  if temp4  >=  10 then _sc1  =  _sc1  +  1  :  temp4  =  temp4  -  10
-
-	LDA temp4
-	CMP #10
-     BCC .skipL043
-.condpart46
-	INC _sc1
-	LDA temp4
-	SEC
-	SBC #10
-	STA temp4
-.skipL043
-.L044 ;  _sc2  =   ( temp4  *  4  *  4 )   |  _sc2
-
-; complex statement detected
-	LDA temp4
-	asl
-	asl
-	asl
-	asl
-	ORA _sc2
-	STA _sc2
 .
  ; 
 
-.L045 ;  temp4  =  c
-
-	LDA c
-	STA temp4
 .
  ; 
 
-.L046 ;  _sc2  =  _sc2  &  240  :  _sc3  =  0
-
-	LDA _sc2
-	AND #240
-	STA _sc2
-	LDA #0
-	STA _sc3
-.L047 ;  if temp4  >=  100 then _sc2  =  _sc2  +  1  :  temp4  =  temp4  -  100
-
-	LDA temp4
-	CMP #100
-     BCC .skipL047
-.condpart47
-	INC _sc2
-	LDA temp4
-	SEC
-	SBC #100
-	STA temp4
-.skipL047
-.L048 ;  if temp4  >=  100 then _sc2  =  _sc2  +  1  :  temp4  =  temp4  -  100
-
-	LDA temp4
-	CMP #100
-     BCC .skipL048
-.condpart48
-	INC _sc2
-	LDA temp4
-	SEC
-	SBC #100
-	STA temp4
-.skipL048
-.L049 ;  if temp4  >=  50 then _sc3  =  _sc3  +  80  :  temp4  =  temp4  -  50
-
-	LDA temp4
-	CMP #50
-     BCC .skipL049
-.condpart49
-	LDA _sc3
-	CLC
-	ADC #80
-	STA _sc3
-	LDA temp4
-	SEC
-	SBC #50
-	STA temp4
-.skipL049
-.L050 ;  if temp4  >=  30 then _sc3  =  _sc3  +  48  :  temp4  =  temp4  -  30
-
-	LDA temp4
-	CMP #30
-     BCC .skipL050
-.condpart50
-	LDA _sc3
-	CLC
-	ADC #48
-	STA _sc3
-	LDA temp4
-	SEC
-	SBC #30
-	STA temp4
-.skipL050
-.L051 ;  if temp4  >=  20 then _sc3  =  _sc3  +  32  :  temp4  =  temp4  -  20
-
-	LDA temp4
-	CMP #20
-     BCC .skipL051
-.condpart51
-	LDA _sc3
-	CLC
-	ADC #32
-	STA _sc3
-	LDA temp4
-	SEC
-	SBC #20
-	STA temp4
-.skipL051
-.L052 ;  if temp4  >=  10 then _sc3  =  _sc3  +  16  :  temp4  =  temp4  -  10
-
-	LDA temp4
-	CMP #10
-     BCC .skipL052
-.condpart52
-	LDA _sc3
-	CLC
-	ADC #16
-	STA _sc3
-	LDA temp4
-	SEC
-	SBC #10
-	STA temp4
-.skipL052
-.L053 ;  _sc3  =  _sc3  |  temp4
-
-	LDA _sc3
-	ORA temp4
-	STA _sc3
 .
  ; 
 
-.L054 ;  drawscreen
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.
+ ; 
+
+.L011 ;  drawscreen
 
  jsr drawscreen
 .
  ; 
 
-.L055 ;  rem /** Start main program loop again **/
+.
+ ; 
 
-.L056 ;  goto main
+.
+ ; 
+
+.L012 ;  goto main
  jmp .main
  if ECHOFIRST
        echo "    ",[(scoretable - *)]d , "bytes of ROM space left")
